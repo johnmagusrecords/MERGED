@@ -1,0 +1,18 @@
+{
+    "welcome_message": {
+        "en": "📣 Welcome to MAGUS PRIME X\n\nYour intelligent trading assistant is now LIVE.\n\nYou will receive real-time trading signals for:\n✅ Gold\n✅ Crude Oil\n✅ Natural Gas\n✅ Silver\n✅ DAX\n✅ Cryptos & more...\n\nActivated Mode: #SAFE_RECOVERY\nCapital Protection + Loss Recovery in every trade.\n\nStay focused.\nYour comeback starts now 🚀",
+        "ar": "📣 أهلاً بك في MAGUS PRIME X\n\nمساعدك الذكي للتداول الآن يعمل ✅\n\nستصلك إشارات مباشرة للسوق في:\n✅ الذهب\n✅ النفط الخام\n✅ الغاز الطبيعي\n✅ الفضة\n✅ مؤشر DAX\n✅ العملات الرقمية والمزيد...\n\nالوضع الحالي: #SAFE_RECOVERY\nحماية رأس المال + استرجاع الخسائر بكل صفقة.\n\nخلك مركز...\nرحلة التعافي تبدأ الآن 🚀"
+    },
+    "signal_format": {
+        "en": "#GOLD BUY  📈\nEntry: 3110\nStop Loss: 3100\nTake Profit 1: 3120\nTake Profit 2: 3135\nTake Profit 3: 3150\nTrade Type: Breakout from resistance\nTimeframe: 30m\nMode: #SAFE_RECOVERY",
+        "ar": "#الذهب شراء  📈\nدخول: 3110\nوقف الخسارة: 3100\nالهدف 1: 3120\nالهدف 2: 3135\nالهدف 3: 3150\nنوع الصفقة: اختراق مقاومة\nالفاصل الزمني: 30 دقيقة\nالوضع: #SAFE_RECOVERY"
+    },
+    "signal_result": {
+        "en": "📊 #GOLD Signal Result\n🟢 Entry: 3110\n🔴 SL: 3100\n✅ TP1 Hit: 3120\n✅ TP2 Hit: 3135\n❌ TP3 Not Reached\n\nTrade Outcome: ✅ PROFIT\nTotal Pips Gained: +25\nMode: #SAFE_RECOVERY",
+        "ar": "📊 نتيجة صفقة #الذهب\n🟢 دخول: 3110\n🔴 وقف خسارة: 3100\n✅ الهدف الأول تحقق: 3120\n✅ الهدف الثاني تحقق: 3135\n❌ لم يتم الوصول للهدف الثالث\n\nالنتيجة: ✅ ربح\nعدد النقاط المحققة: +25\nالوضع: #SAFE_RECOVERY"
+    },
+    "daily_summary": {
+        "en": "📅 MAGUS PRIME X – Daily Summary\n\n✅ Total Trades: 4\n✔️ Wins: 3\n❌ Losses: 1\n🔥 Accuracy: 75%\n📈 Net Gain: +68 pips\n💼 Mode: #SAFE_RECOVERY\n🕒 Timeframe: 1m–4h\nMarkets: Gold, Oil, Silver, DAX\n\nLet's grow it again tomorrow!",
+        "ar": "📅 ملخص اليوم – MAGUS PRIME X\n\n✅ عدد الصفقات: 4\n✔️ صفقات ناجحة: 3\n❌ صفقات خاسرة: 1\n🔥 دقة الإشارات: 75%\n📈 صافي الربح: +68 نقطة\n💼 الوضع: #SAFE_RECOVERY\n🕒 الفريمات: من دقيقة إلى 4 ساعات\nالأسواق: الذهب، النفط، الفضة، DAX\n\nنشوفكم بكرة على ربح جديد!"
+    }
+}

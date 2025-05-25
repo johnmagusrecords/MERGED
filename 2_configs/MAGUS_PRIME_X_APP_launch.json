@@ -1,0 +1,14 @@
+{
+  // ...existing configurations...
+  "configurations": [
+    // ...existing configurations...
+    {
+      "name": "Run Bot as Module",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "MAGUS_PRIME_X_APP.bot",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}

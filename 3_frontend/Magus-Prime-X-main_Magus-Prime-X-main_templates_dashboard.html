@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Trading Dashboard</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #f5f7fa;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        text-align: center;
+        color: #2d3748;
+      }
+      .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      h2 {
+        margin-top: 0;
+        color: #4a5568;
+        border-bottom: 1px solid #edf2f7;
+        padding-bottom: 10px;
+      }
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .stat-card {
+        background-color: #f8fafc;
+        border-radius: 6px;
+        padding: 15px;
+        width: calc(25% - 15px);
+        box-sizing: border-box;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: #718096;
+        text-transform: uppercase;
+      }
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2d3748;
+        margin-top: 5px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #edf2f7;
+      }
+      th {
+        background-color: #f8fafc;
+        color: #718096;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>&#128302; MAGUS PRIME X Dashboard</h1>
+
+      <div class="card">
+        <h2>Account Summary</h2>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Balance</div>
+            <div class="stat-value">${{balance}}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Open Positions</div>
+            <div class="stat-value">{{positions}}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Win Rate</div>
+            <div class="stat-value">{{win_rate}}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Trades</div>
+            <div class="stat-value">{{total_trades}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Active Positions</h2>
+        <table id="positionsTable">
+          <!-- Positions will be inserted here by JavaScript -->
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Recent Signals</h2>
+        <table id="signalsTable">
+          <!-- Signals will be inserted here by JavaScript -->
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript to populate tables would be here
+    </script>
+  </body>
+</html>

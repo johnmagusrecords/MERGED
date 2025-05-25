@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X</title>
+    <style>
+      /* Global Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        font-family: "Arial", sans-serif;
+        color: white;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      /* Loading/Splash Screen */
+      .splash-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        transition: opacity 0.5s ease-out;
+      }
+
+      .logo {
+        max-width: 200px;
+        margin-bottom: 30px;
+        animation:
+          pulse 2s infinite,
+          zoomIn 1.5s;
+      }
+
+      .app-name {
+        font-size: 42px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation:
+          fadeIn 2s,
+          glow 2s infinite alternate;
+      }
+
+      .tagline {
+        font-size: 20px;
+        color: #aaa;
+        margin-bottom: 40px;
+        animation: fadeIn 3s;
+      }
+
+      .loading-status {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .loading-dots {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border-radius: 50%;
+        margin: 0 5px;
+        animation: dot-pulse 1.5s infinite ease-in-out;
+      }
+
+      .dot:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+
+      .dot:nth-child(3) {
+        animation-delay: 1s;
+      }
+
+      /* Login Form */
+      .login-form {
+        background-color: rgba(40, 40, 40, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        width: 300px;
+        margin: 0 auto;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        transform: translateY(50px);
+        opacity: 0;
+        display: none;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #ccc;
+        text-align: left;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: #333;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .login-btn:hover {
+        transform: scale(1.05);
+      }
+
+      /* Particle Background */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* Animation Keyframes */
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 10px rgba(106, 17, 203, 0.5));
+        }
+        50% {
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 20px rgba(37, 117, 252, 0.8));
+        }
+        100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 10px rgba(106, 17, 203, 0.5));
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes glow {
+        from {
+          filter: drop-shadow(0 0 5px rgba(106, 17, 203, 0.5));
+        }
+        to {
+          filter: drop-shadow(0 0 15px rgba(37, 117, 252, 0.8));
+        }
+      }
+
+      @keyframes dot-pulse {
+        0% {
+          transform: scale(0.6);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.6);
+          opacity: 0.6;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Splash Screen & Login Container -->
+    <div class="splash-container" id="splash-screen">
+      <div class="logo">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6a11cb" />
+              <stop offset="100%" stop-color="#2575fc" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+          <text
+            x="100"
+            y="120"
+            font-size="40"
+            text-anchor="middle"
+            fill="url(#gradient)"
+            font-weight="bold"
+          >
+            MPRIME
+          </text>
+          <path d="M100,20 L100,50" stroke="url(#gradient)" stroke-width="5" />
+          <path
+            d="M100,150 L100,180"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+          <path d="M20,100 L50,100" stroke="url(#gradient)" stroke-width="5" />
+          <path
+            d="M150,100 L180,100"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+        </svg>
+      </div>
+      <h1 class="app-name">MAGUS PRIME X</h1>
+      <p class="tagline">Advanced Trading Intelligence</p>
+
+      <div id="initializing" class="loading-status">
+        <p>Initializing System...</p>
+        <div class="loading-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="login-form" id="login-form">
+        <div class="form-group">
+          <label for="username">Capital.com Username</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+            value="dj.johnmagus@gmail.com"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            value="@boutonY27"
+          />
+        </div>
+        <div class="form-group">
+          <label for="api-key">API Key</label>
+          <input
+            type="text"
+            id="api-key"
+            placeholder="Enter API key"
+            value="ZhNNE4pnHX1Ku67d"
+          />
+        </div>
+        <button class="login-btn" id="login-button">Log In</button>
+        <p
+          id="login-status"
+          style="
+            color: #6a11cb;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+          "
+        >
+          Connecting to Capital.com...
+        </p>
+      </div>
+    </div>
+
+    <!-- Particle Background -->
+    <canvas id="particles" class="particles"></canvas>
+
+    <script>
+      // Particle animation in the background
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      // Particles
+      const particles = [];
+      const particleCount = 50;
+
+      // Create particles
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2 + 1,
+          color: `rgba(${Math.floor(Math.random() * 100 + 100)}, ${Math.floor(Math.random() * 100 + 100)}, ${Math.floor(Math.random() * 255)}, ${Math.random() * 0.5 + 0.1})`,
+          speedX: Math.random() * 1 - 0.5,
+          speedY: Math.random() * 1 - 0.5,
+        });
+      }
+
+      // Draw particles
+      function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((particle) => {
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          ctx.fillStyle = particle.color;
+          ctx.fill();
+
+          // Move particle
+          particle.x += particle.speedX;
+          particle.y += particle.speedY;
+
+          // Bounce off walls
+          if (particle.x < 0 || particle.x > canvas.width) {
+            particle.speedX *= -1;
+          }
+          if (particle.y < 0 || particle.y > canvas.height) {
+            particle.speedY *= -1;
+          }
+        });
+
+        requestAnimationFrame(drawParticles);
+      }
+
+      drawParticles();
+
+      // Show login form after a delay
+      setTimeout(() => {
+        const initText = document.getElementById("initializing");
+        initText.style.animation = "fadeIn 1s reverse forwards";
+
+        setTimeout(() => {
+          initText.style.display = "none";
+          const loginForm = document.getElementById("login-form");
+          loginForm.style.display = "block";
+          loginForm.style.animation = "slideUp 1s forwards";
+        }, 1000);
+      }, 4000);
+
+      // Function to handle login
+      document
+        .getElementById("login-button")
+        .addEventListener("click", function () {
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const apiKey = document.getElementById("api-key").value;
+
+          // Show connecting status
+          const statusElement = document.getElementById("login-status");
+          statusElement.style.display = "block";
+          statusElement.textContent = "Connecting to Capital.com...";
+
+          // Validate credentials
+          if (!username || !password || !apiKey) {
+            statusElement.style.color = "#ff4d4d";
+            statusElement.textContent = "Please fill in all fields";
+            return;
+          }
+
+          // Save credentials to localStorage for use in the integrated app
+          localStorage.setItem("capital_username", username);
+          localStorage.setItem("capital_password", password);
+          localStorage.setItem("capital_apikey", apiKey);
+
+          // Simulate API connection
+          setTimeout(() => {
+            statusElement.textContent =
+              "Connected! Loading trading platform...";
+
+            // Send a message to the parent container (unified app)
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(
+                {
+                  action: "login",
+                  username: username,
+                },
+                "*",
+              );
+            }
+
+            // After successful login, redirect to the integrated dashboard
+            // This will only happen if not in an iframe
+            setTimeout(() => {
+              if (window.self === window.top) {
+                window.location.href = "magus_prime_x_integrated.html";
+              }
+            }, 1500);
+          }, 2000);
+        });
+    </script>
+  </body>
+</html>

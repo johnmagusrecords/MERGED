@@ -1,0 +1,47 @@
+{
+  "Toncoin to US Dollar": {
+    "timestamp": "2025-04-07T22:44:20.011371",
+    "attempted_matches": [
+      "Exact: EUR/USD_W",
+      "Exact: EUR/USD",
+      "Exact: USD/NOK",
+      "Exact: USD/HKD",
+      "Exact: USD/SEK",
+      "Exact: AUD/SGD",
+      "Partial: EUR/USD_W",
+      "Partial: EUR/USD",
+      "Partial: USD/NOK",
+      "Partial: USD/HKD",
+      "Partial: USD/SEK",
+      "Partial: AUD/SGD",
+      "Epic: EURUSD_W",
+      "Epic: EURUSD",
+      "Epic: USDNOK",
+      "Epic: USDHKD",
+      "Epic: USDSEK",
+      "Epic: AUDSGD"
+    ],
+    "normalized_form": "TONCOINTOUSDOLLAR"
+  },
+  "Bitcoin / USD": {
+    "timestamp": "2025-04-08T13:50:25.888395",
+    "attempted_matches": [
+      "Exact: Bitcoin Cash / Bitcoin",
+      "Exact: Cardano / Bitcoin",
+      "Exact: Stellar / Bitcoin",
+      "Exact: Litecoin / Bitcoin",
+      "Exact: Ripple / Bitcoin",
+      "Partial: Bitcoin Cash / Bitcoin",
+      "Partial: Cardano / Bitcoin",
+      "Partial: Stellar / Bitcoin",
+      "Partial: Litecoin / Bitcoin",
+      "Partial: Ripple / Bitcoin",
+      "Epic: BCHBTC",
+      "Epic: ADABTC",
+      "Epic: XLMBTC",
+      "Epic: LTCBTC",
+      "Epic: XRPBTC"
+    ],
+    "normalized_form": "BITCOINUSD"
+  }
+}

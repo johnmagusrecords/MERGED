@@ -1,0 +1,224 @@
+{
+  "BTCUSD": {
+    "type": "Crypto",
+    "strategy": "FVG",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "ETHUSD": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "XAUUSD": {
+    "type": "Commodity",
+    "strategy": "Support/Resistance",
+    "timeframe": "2h",
+    "hold_hours": 24
+  },
+  "GOLD": {
+    "type": "Commodity",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 24
+  },
+  "US30": {
+    "type": "Index",
+    "strategy": "Gap Trading",
+    "timeframe": "15m",
+    "hold_hours": 8
+  },
+  "US100": {
+    "type": "Index",
+    "strategy": "Swing",
+    "timeframe": "3h",
+    "hold_hours": 36
+  },
+  "GER40": {
+    "type": "Index",
+    "strategy": "Scalping",
+    "timeframe": "30m",
+    "hold_hours": 6
+  },
+  "OIL": {
+    "type": "Commodity",
+    "strategy": "Swing",
+    "timeframe": "2h",
+    "hold_hours": 24
+  },
+  "EURUSD": {
+    "type": "Forex",
+    "strategy": "Trend Following",
+    "timeframe": "30m",
+    "hold_hours": 12
+  },
+  "GBPUSD": {
+    "type": "Forex",
+    "strategy": "Range Trading",
+    "timeframe": "15m",
+    "hold_hours": 6
+  },
+  "USDJPY": {
+    "type": "Forex",
+    "strategy": "News Trading",
+    "timeframe": "5m",
+    "hold_hours": 4
+  },
+  "SILVER": {
+    "type": "Commodity",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 24
+  },
+  "XAGUSD": {
+    "type": "Commodity",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 24
+  },
+  "WTI": {
+    "type": "Commodity",
+    "strategy": "Swing",
+    "timeframe": "2h",
+    "hold_hours": 24
+  },
+  "BRENT": {
+    "type": "Commodity",
+    "strategy": "Swing",
+    "timeframe": "2h",
+    "hold_hours": 24
+  },
+  "NATGAS": {
+    "type": "Commodity",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 24
+  },
+  "GAS": {
+    "type": "Commodity",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 24
+  },
+  "DAX": {
+    "type": "Index",
+    "strategy": "Scalping",
+    "timeframe": "30m",
+    "hold_hours": 6
+  },
+  "NAS100": {
+    "type": "Index",
+    "strategy": "Swing",
+    "timeframe": "3h",
+    "hold_hours": 36
+  },
+  "SPX500": {
+    "type": "Index",
+    "strategy": "Gap Trading",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "DJI": {
+    "type": "Index",
+    "strategy": "Gap Trading",
+    "timeframe": "15m",
+    "hold_hours": 8
+  },
+  "BTC": {
+    "type": "Crypto",
+    "strategy": "FVG",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "ETH": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "SOL": {
+    "type": "Crypto",
+    "strategy": "FVG",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "ADA": {
+    "type": "Crypto",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "XRP": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "DOGE": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "30m",
+    "hold_hours": 6
+  },
+  "BNB": {
+    "type": "Crypto",
+    "strategy": "FVG",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "AVAX": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "DOT": {
+    "type": "Crypto",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "MATIC": {
+    "type": "Crypto",
+    "strategy": "FVG",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "SHIB": {
+    "type": "Crypto",
+    "strategy": "Breakout",
+    "timeframe": "30m",
+    "hold_hours": 6
+  },
+  "LTC": {
+    "type": "Crypto",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "USDCHF": {
+    "type": "Forex",
+    "strategy": "Range Trading",
+    "timeframe": "30m",
+    "hold_hours": 8
+  },
+  "AUDUSD": {
+    "type": "Forex",
+    "strategy": "Trend Following",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "NZDUSD": {
+    "type": "Forex",
+    "strategy": "Support/Resistance",
+    "timeframe": "1h",
+    "hold_hours": 12
+  },
+  "USDCAD": {
+    "type": "Forex",
+    "strategy": "Range Trading",
+    "timeframe": "1h",
+    "hold_hours": 12
+  }
+}

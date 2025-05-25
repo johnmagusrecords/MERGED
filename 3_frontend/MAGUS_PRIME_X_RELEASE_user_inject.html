@@ -1,0 +1,84 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>MAGUS PRIME X Fix</title> 
+  <script> 
+    // Connect to the running application 
+    async function injectFix() { 
+      try { 
+        // Fetch list of pages from debugging port 
+        const response = await fetch('http://localhost:9222/json'); 
+        const pages = await response.json(); 
+        const mainPage = pages.find(p = PRIME X')); 
+ECHO is off.
+        if (mainPage) { 
+          document.getElementById('status').innerText = 'Found MAGUS PRIME X page, injecting fix...'; 
+ECHO is off.
+          // Connect to the page 
+          const ws = new WebSocket(mainPage.webSocketDebuggerUrl); 
+          ws.onopen = function() { 
+            document.getElementById('status').innerText = 'Connected to MAGUS PRIME X, applying button fix...'; 
+ECHO is off.
+            // Read our fix script 
+            fetch('file://C:\Users\djjoh\OneDrive\Desktop\MAGUS_PRIME_X_RELEASE\user\magus_button_fix.js'.replace(/\\/g, '/')).then(r =
+              // Execute in the context of the page 
+              ws.send(JSON.stringify({ 
+                id: 1, 
+                method: 'Runtime.evaluate', 
+                params: { 
+                  expression: code, 
+                  returnByValue: true 
+                } 
+              })); 
+ECHO is off.
+              document.getElementById('status').innerText = 'Button fix successfully applied to MAGUS PRIME X!'; 
+              document.getElementById('success').style.display = 'block'; 
+            }); 
+          }; 
+        } else { 
+          document.getElementById('status').innerText = 'Could not find MAGUS PRIME X page. Please make sure the application is running.'; 
+        } 
+      } catch (error) { 
+        document.getElementById('status').innerText = 'Error: ' + error.message; 
+      } 
+    } 
+ECHO is off.
+    // Run the injection once the page loads 
+    window.addEventListener('load', injectFix); 
+  </script> 
+  <style> 
+    body { 
+      font-family: Arial, sans-serif; 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      text-align: center; 
+    } 
+    h1 { color: #333; } 
+    #status { 
+      margin: 20px 0; 
+      padding: 10px; 
+      background: #f5f5f5; 
+      border-radius: 5px; 
+    } 
+    #success { 
+      display: none; 
+      margin-top: 20px; 
+      padding: 15px; 
+      background: #e6ffe6; 
+      border: 1px solid #99cc99; 
+      border-radius: 5px; 
+    } 
+  </style> 
+</head> 
+<body> 
+  <h1>MAGUS PRIME X Button Fix</h1> 
+  <p>This tool will fix all button functionality in your MAGUS PRIME X application.</p> 
+  <div id="status">Connecting to MAGUS PRIME X...</div> 
+  <div id="success"> 
+    <h2>✓ Success!</h2> 
+    <p>All buttons in MAGUS PRIME X should now be fully functional.</p> 
+    <p>You can close this window and continue using MAGUS PRIME X.</p> 
+  </div> 
+</body> 
+</html> 

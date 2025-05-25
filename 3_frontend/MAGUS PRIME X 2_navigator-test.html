@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Navigation Test</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-bar {
+        background-color: #1a1f2e;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px;
+        align-items: center;
+        border-bottom: 1px solid #2d3748;
+      }
+
+      .logo {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo-icon {
+        margin-right: 5px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .nav-link.active {
+        color: white;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .action-button {
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        color: white;
+        background-color: #2d3748;
+      }
+
+      .action-button.primary {
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+      }
+
+      .page-section {
+        padding: 20px;
+        display: none;
+      }
+
+      .page-section.active {
+        display: block;
+      }
+
+      .status-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #1a1f2e;
+        padding: 10px;
+        border-top: 1px solid #2d3748;
+      }
+
+      .click-log {
+        background-color: #0d1117;
+        padding: 10px;
+        margin-top: 10px;
+        height: 150px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 14px;
+      }
+
+      .log-entry {
+        margin-bottom: 5px;
+      }
+
+      .log-entry.success {
+        color: #4ade80;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- This is a direct replica of the top navigation bar shown in the screenshot -->
+    <div class="nav-bar">
+      <div class="logo">
+        <span class="logo-icon">X</span>
+        MAGUS PRIME X
+      </div>
+      <div class="nav-links">
+        <a href="#dashboard" class="nav-link active">Dashboard</a>
+        <a href="#trades" class="nav-link">Trades</a>
+        <a href="#markets" class="nav-link">Markets</a>
+        <a href="#portfolio" class="nav-link">Portfolio</a>
+        <a href="#news" class="nav-link">News</a>
+        <a href="#learn" class="nav-link">Learn</a>
+      </div>
+      <div class="nav-actions">
+        <button class="action-button primary">Start Bot</button>
+        <button class="action-button">USD</button>
+        <button id="connectBtn" class="action-button">Connect</button>
+        <button class="action-button">Account</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div id="dashboard" class="page-section active">
+      <h2>Dashboard</h2>
+      <p>This is the dashboard page with charts and summary data.</p>
+    </div>
+
+    <div id="trades" class="page-section">
+      <h2>Trades</h2>
+      <p>View and manage your active trades.</p>
+    </div>
+
+    <div id="markets" class="page-section">
+      <h2>Markets</h2>
+      <p>Browse available markets and analyze trading opportunities.</p>
+    </div>
+
+    <div id="portfolio" class="page-section">
+      <h2>Portfolio</h2>
+      <p>Track your investment portfolio and performance.</p>
+    </div>
+
+    <div id="news" class="page-section">
+      <h2>News</h2>
+      <p>Latest market news and updates.</p>
+    </div>
+
+    <div id="learn" class="page-section">
+      <h2>Learn</h2>
+      <p>Educational resources and trading guides.</p>
+    </div>
+
+    <!-- Status panel -->
+    <div class="status-panel">
+      <h3>Button Click Log</h3>
+      <div class="click-log" id="clickLog">
+        <div class="log-entry">Click any button above to test...</div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add log entry function
+        function logClick(message) {
+          const log = document.getElementById("clickLog");
+          const entry = document.createElement("div");
+          entry.className = "log-entry success";
+          entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+          log.appendChild(entry);
+          log.scrollTop = log.scrollHeight;
+        }
+
+        // Fix navigation links
+        const navLinks = document.querySelectorAll(".nav-links .nav-link");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Get target section
+            const targetId = this.getAttribute("href").replace("#", "");
+            logClick(`Navigation: Clicked on ${targetId}`);
+
+            // Update active classes on links
+            navLinks.forEach((navLink) => {
+              navLink.classList.remove("active");
+            });
+            this.classList.add("active");
+
+            // Update visibility of sections
+            document.querySelectorAll(".page-section").forEach((section) => {
+              section.classList.remove("active");
+            });
+
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+              targetSection.classList.add("active");
+            }
+          });
+        });
+
+        // Fix Start Bot button
+        const startBotBtn = document.querySelector(".action-button.primary");
+        startBotBtn.addEventListener("click", function () {
+          if (this.textContent === "Start Bot") {
+            this.textContent = "Stop Bot";
+            logClick("Action: Started the trading bot");
+          } else {
+            this.textContent = "Start Bot";
+            logClick("Action: Stopped the trading bot");
+          }
+        });
+
+        // Fix USD button
+        const usdBtn = document.querySelector(
+          ".nav-actions .action-button:nth-child(2)",
+        );
+        usdBtn.addEventListener("click", function () {
+          logClick("Action: Clicked currency selector (USD)");
+
+          // Toggle between currencies
+          if (this.textContent === "USD") {
+            this.textContent = "EUR";
+            logClick("Currency changed to EUR");
+          } else if (this.textContent === "EUR") {
+            this.textContent = "GBP";
+            logClick("Currency changed to GBP");
+          } else {
+            this.textContent = "USD";
+            logClick("Currency changed to USD");
+          }
+        });
+
+        // Fix Connect button
+        const connectBtn = document.getElementById("connectBtn");
+        connectBtn.addEventListener("click", function () {
+          if (this.textContent === "Connect") {
+            this.textContent = "Connected";
+            logClick("Action: Connected to Capital.com");
+          } else {
+            this.textContent = "Connect";
+            logClick("Action: Disconnected from trading API");
+          }
+        });
+
+        // Fix Account button
+        const accountBtn = document.querySelector(
+          ".nav-actions .action-button:last-child",
+        );
+        accountBtn.addEventListener("click", function () {
+          logClick("Action: Opened account settings");
+        });
+
+        logClick("All button handlers successfully initialized");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Button Fix</title> 
+    <style> 
+        body { margin: 0; padding: 0; overflow: hidden; } 
+        #frame { width: 100%; height: 100%; border: none; } 
+    </style> 
+</head> 
+<body> 
+    <iframe id="frame" src="app://local/index.html"></iframe> 
+    <script> 
+        // Wait for frame to load 
+        document.getElementById('frame').onload = function() { 
+            // Get the iframe's document 
+ECHO is off.
+            // Inject our fix script 
+            const script = frameDoc.createElement('script'); 
+            script.src = 'FORCE-FIX-BUTTONS.js'; 
+            frameDoc.head.appendChild(script); 
+ECHO is off.
+            console.log('BUTTON FIX INJECTED SUCCESSFULLY'); 
+        }; 
+    </script> 
+</body> 
+</html> 

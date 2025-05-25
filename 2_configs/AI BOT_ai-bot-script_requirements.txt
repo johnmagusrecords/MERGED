@@ -1,0 +1,6 @@
+flask
+requests
+pandas
+talib
+textblob
+python-dotenv

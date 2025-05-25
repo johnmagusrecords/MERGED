@@ -1,0 +1,420 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chart Analyzer Demo</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+        <style>
+            body {
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            .card {
+                margin-bottom: 20px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .chart-container {
+                margin: 20px 0;
+                text-align: center;
+            }
+            .pattern-item {
+                margin-bottom: 10px;
+                padding: 10px;
+                background-color: #f8f9fa;
+                border-radius: 5px;
+            }
+            .badge-bullish {
+                background-color: #28a745;
+                color: white;
+            }
+            .badge-bearish {
+                background-color: #dc3545;
+                color: white;
+            }
+            .badge-neutral {
+                background-color: #6c757d;
+                color: white;
+            }
+            .header {
+                background: linear-gradient(135deg, #5f72bd 0%, #9b23ea 100%);
+                color: white;
+                padding: 20px;
+                margin-bottom: 30px;
+                border-radius: 10px;
+                text-align: center;
+            }
+            .support-resistance-levels {
+                margin-top: 15px;
+            }
+            .level-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px;
+                margin: 5px 0;
+                border-radius: 4px;
+            }
+            .level-support {
+                background-color: rgba(40, 167, 69, 0.2);
+                border-left: 4px solid #28a745;
+            }
+            .level-resistance {
+                background-color: rgba(220, 53, 69, 0.2);
+                border-left: 4px solid #dc3545;
+            }
+            .technical-indicators {
+                margin-top: 20px;
+            }
+            .indicator-row {
+                display: flex;
+                justify-content: space-between;
+                margin: 5px 0;
+                padding: 5px 0;
+                border-bottom: 1px solid #eee;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>MAGUS PRIME X - Chart Analyzer Demo</h1>
+                <p class="lead">Advanced Technical Analysis & Pattern Recognition</p>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Select Symbol & Timeframe</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="analysis-form" class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="symbol" class="form-label">Symbol</label>
+                                    <select class="form-select" id="symbol" name="symbol">
+                                        <option value="BTC/USD">BTC/USD</option>
+                                        <option value="ETH/USD">ETH/USD</option>
+                                        <option value="XRP/USD">XRP/USD</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="timeframe" class="form-label">Timeframe</label>
+                                    <select class="form-select" id="timeframe" name="timeframe">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary w-100">Analyze</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Market Summary</h5>
+                        </div>
+                        <div class="card-body" id="market-summary">
+                            <div class="text-center">
+                                <p>Select a symbol and timeframe to analyze</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Chart Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" id="chart-container">
+                                <p>Chart will appear here after analysis</p>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6>Candlestick Patterns</h6>
+                                        </div>
+                                        <div class="card-body" id="candlestick-patterns">
+                                            <!-- Candlestick patterns will be shown here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6>Chart Patterns</h6>
+                                        </div>
+                                        <div class="card-body" id="chart-patterns">
+                                            <!-- Chart patterns will be shown here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6>Support & Resistance</h6>
+                                        </div>
+                                        <div class="card-body" id="support-resistance">
+                                            <!-- Support & resistance levels will be shown here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6>Technical Indicators</h6>
+                                        </div>
+                                        <div class="card-body" id="technical-indicators">
+                                            <!-- Technical indicators will be shown here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#analysis-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const symbol = $('#symbol').val();
+                    const timeframe = $('#timeframe').val();
+                    
+                    // Show loading indicators
+                    $('#market-summary').html('<div class="text-center"><p>Analyzing market data...</p><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                    $('#chart-container').html('<div class="text-center"><p>Generating chart...</p><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                    $('#candlestick-patterns').html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>');
+                    $('#chart-patterns').html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>');
+                    $('#support-resistance').html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>');
+                    $('#technical-indicators').html('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>');
+                    
+                    // Make API request
+                    $.ajax({
+                        url: '/analyze',
+                        method: 'GET',
+                        data: { symbol: symbol, timeframe: timeframe },
+                        success: function(response) {
+                            updateUI(response);
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                            $('#market-summary').html('<div class="alert alert-danger">Analysis failed: ' + error.responseText + '</div>');
+                        }
+                    });
+                });
+                
+                function updateUI(data) {
+                    // Update chart image
+                    if (data.chart_path) {
+                        const chartPath = data.chart_path.replace(/^static\//, '/');
+                        $('#chart-container').html(`<img src="${chartPath}?t=${new Date().getTime()}" class="img-fluid" alt="Market chart with patterns">`);
+                    }
+                    
+                    // Update market summary
+                    const marketSummary = data.market_summary;
+                    let biasClass = 'badge-neutral';
+                    if (marketSummary.overall_bias === 'bullish') biasClass = 'badge-bullish';
+                    if (marketSummary.overall_bias === 'bearish') biasClass = 'badge-bearish';
+                    
+                    let signalClass = 'badge-neutral';
+                    if (marketSummary.trading_signal === 'buy') signalClass = 'badge-bullish';
+                    if (marketSummary.trading_signal === 'sell') signalClass = 'badge-bearish';
+                    
+                    $('#market-summary').html(`
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>${data.symbol} <span class="badge ${biasClass}">${marketSummary.overall_bias.toUpperCase()}</span></h4>
+                                <p>Last Price: <strong>${data.technical_indicators.last_price.toFixed(2)}</strong></p>
+                                <p>Confidence: <strong>${(marketSummary.confidence * 100).toFixed(1)}%</strong></p>
+                                <p>Signal: <span class="badge ${signalClass}">${marketSummary.trading_signal.toUpperCase()}</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Key Levels</h5>
+                                <p>Nearest Support: <strong>${marketSummary.key_levels.nearest_support.toFixed(2)}</strong></p>
+                                <p>Nearest Resistance: <strong>${marketSummary.key_levels.nearest_resistance.toFixed(2)}</strong></p>
+                            </div>
+                        </div>
+                    `);
+                    
+                    // Update candlestick patterns
+                    const candlestickPatterns = data.candlestick_patterns.patterns || [];
+                    if (candlestickPatterns.length > 0) {
+                        let patternsHtml = '';
+                        candlestickPatterns.forEach(pattern => {
+                            let patternClass = 'badge-neutral';
+                            if (pattern.sentiment === 'bullish') patternClass = 'badge-bullish';
+                            if (pattern.sentiment === 'bearish') patternClass = 'badge-bearish';
+                            
+                            patternsHtml += `
+                                <div class="pattern-item">
+                                    <strong>${pattern.name}</strong> 
+                                    <span class="badge ${patternClass}">${pattern.sentiment}</span>
+                                    <div>Strength: ${(pattern.strength * 100).toFixed(1)}%</div>
+                                    <div>Location: Candle ${pattern.candle_index}</div>
+                                </div>
+                            `;
+                        });
+                        $('#candlestick-patterns').html(patternsHtml);
+                    } else {
+                        $('#candlestick-patterns').html('<p>No significant candlestick patterns detected</p>');
+                    }
+                    
+                    // Update chart patterns
+                    const chartPatterns = data.chart_patterns.patterns || [];
+                    if (chartPatterns.length > 0) {
+                        let patternsHtml = '';
+                        chartPatterns.forEach(pattern => {
+                            let patternClass = 'badge-neutral';
+                            if (pattern.bias === 'bullish') patternClass = 'badge-bullish';
+                            if (pattern.bias === 'bearish') patternClass = 'badge-bearish';
+                            
+                            patternsHtml += `
+                                <div class="pattern-item">
+                                    <strong>${pattern.name}</strong> 
+                                    <span class="badge ${patternClass}">${pattern.bias}</span>
+                                    <div>Confidence: ${(pattern.confidence * 100).toFixed(1)}%</div>
+                                </div>
+                            `;
+                        });
+                        $('#chart-patterns').html(patternsHtml);
+                    } else {
+                        $('#chart-patterns').html('<p>No significant chart patterns detected</p>');
+                    }
+                    
+                    // Update support & resistance levels
+                    const levels = data.support_resistance || [];
+                    if (levels.length > 0) {
+                        let levelsHtml = '<div class="support-resistance-levels">';
+                        levels.forEach(level => {
+                            const levelClass = level.type === 'support' ? 'level-support' : 'level-resistance';
+                            levelsHtml += `
+                                <div class="level-item ${levelClass}">
+                                    <span><strong>${level.type.toUpperCase()}</strong></span>
+                                    <span>${level.price.toFixed(2)}</span>
+                                    <span>Strength: ${(level.strength * 100).toFixed(0)}%</span>
+                                </div>
+                            `;
+                        });
+                        levelsHtml += '</div>';
+                        $('#support-resistance').html(levelsHtml);
+                    } else {
+                        $('#support-resistance').html('<p>No significant support/resistance levels detected</p>');
+                    }
+                    
+                    // Update technical indicators
+                    const indicators = data.technical_indicators;
+                    let indicatorsHtml = '<div class="technical-indicators">';
+                    
+                    // RSI
+                    let rsiClass = '';
+                    let rsiMessage = 'Neutral';
+                    if (indicators.rsi > 70) {
+                        rsiClass = 'text-danger';
+                        rsiMessage = 'Overbought';
+                    } else if (indicators.rsi < 30) {
+                        rsiClass = 'text-success';
+                        rsiMessage = 'Oversold';
+                    }
+                    
+                    indicatorsHtml += `
+                        <div class="indicator-row">
+                            <span><strong>RSI (14)</strong></span>
+                            <span class="${rsiClass}">${indicators.rsi.toFixed(2)} - ${rsiMessage}</span>
+                        </div>
+                    `;
+                    
+                    // MACD
+                    let macdClass = '';
+                    let macdMessage = 'Neutral';
+                    if (indicators.macd.value > indicators.macd.signal) {
+                        macdClass = 'text-success';
+                        macdMessage = 'Bullish';
+                    } else if (indicators.macd.value < indicators.macd.signal) {
+                        macdClass = 'text-danger';
+                        macdMessage = 'Bearish';
+                    }
+                    
+                    indicatorsHtml += `
+                        <div class="indicator-row">
+                            <span><strong>MACD</strong></span>
+                            <span class="${macdClass}">
+                                Value: ${indicators.macd.value.toFixed(2)} | 
+                                Signal: ${indicators.macd.signal.toFixed(2)} - 
+                                ${macdMessage}
+                            </span>
+                        </div>
+                    `;
+                    
+                    // Moving Averages
+                    const ma20 = indicators.moving_averages.sma_20;
+                    const ma50 = indicators.moving_averages.sma_50;
+                    const ma200 = indicators.moving_averages.sma_200;
+                    
+                    let ma20_50Class = '';
+                    let ma20_50Message = 'Neutral';
+                    if (ma20 > ma50) {
+                        ma20_50Class = 'text-success';
+                        ma20_50Message = 'Bullish';
+                    } else if (ma20 < ma50) {
+                        ma20_50Class = 'text-danger';
+                        ma20_50Message = 'Bearish';
+                    }
+                    
+                    let ma50_200Class = '';
+                    let ma50_200Message = 'Neutral';
+                    if (ma50 > ma200) {
+                        ma50_200Class = 'text-success';
+                        ma50_200Message = 'Bullish (Golden Cross)';
+                    } else if (ma50 < ma200) {
+                        ma50_200Class = 'text-danger';
+                        ma50_200Message = 'Bearish (Death Cross)';
+                    }
+                    
+                    indicatorsHtml += `
+                        <div class="indicator-row">
+                            <span><strong>Moving Averages</strong></span>
+                            <span>
+                                SMA20: ${ma20.toFixed(2)} | 
+                                SMA50: ${ma50.toFixed(2)} | 
+                                SMA200: ${ma200.toFixed(2)}
+                            </span>
+                        </div>
+                        <div class="indicator-row">
+                            <span>SMA20 vs SMA50</span>
+                            <span class="${ma20_50Class}">${ma20_50Message}</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span>SMA50 vs SMA200</span>
+                            <span class="${ma50_200Class}">${ma50_200Message}</span>
+                        </div>
+                    `;
+                    
+                    indicatorsHtml += '</div>';
+                    $('#technical-indicators').html(indicatorsHtml);
+                }
+            });
+        </script>
+    </body>
+    </html>
+    

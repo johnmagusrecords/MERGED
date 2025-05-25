@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "github.com/modelcontextprotocol/servers/tree/main/src/sentry": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server_sentry",
+        "--auth-token",
+        "https://0fd0cf47616d6092f9c573550489ec2b@o4509044668825600.ingest.de.sentry.io/4509044680818768"
+      ]
+    }
+  }
+}

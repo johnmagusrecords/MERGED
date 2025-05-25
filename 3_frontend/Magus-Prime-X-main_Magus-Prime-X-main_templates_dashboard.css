@@ -1,0 +1,49 @@
+/* Dashboard Styles */
+body {
+  font-family: Arial;
+  background: #0b0b0c;
+  color: #fff;
+  padding: 30px;
+}
+
+h1 {
+  color: #7fe5f0;
+}
+
+.card {
+  background: #1c1c1e;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+/* Add styles for new dashboard elements */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.stats-box {
+  background: #1c1c1e;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  background: #333;
+  height: 20px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.progress {
+  background: linear-gradient(to right, #00a3ff, #00ffcc);
+  height: 100%;
+  border-radius: 10px;
+  width: 0%; /* Default width, will be set by JS */
+}

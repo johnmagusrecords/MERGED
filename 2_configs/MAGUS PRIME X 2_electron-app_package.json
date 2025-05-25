@@ -1,0 +1,23 @@
+{
+  "name": "magus-prime-x",
+  "version": "1.0.0",
+  "description": "MAGUS PRIME X Trading Bot with Capital.com Integration",
+  "main": "main-electron.js",
+  "scripts": {
+    "start": "electron .",
+    "package-win": "electron-packager . magus-prime-x --platform=win32 --arch=x64 --out=release-builds --overwrite"
+  },
+  "author": "MAGUS PRIME X Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "electron-log": "^5.0.1"
+  }
+}

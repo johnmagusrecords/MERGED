@@ -1,0 +1,14 @@
+flask==2.3.3
+requests==2.31.0
+pandas==2.1.0
+numpy==1.24.3
+python-dotenv==1.0.0
+python-telegram-bot==20.0
+TA-Lib==0.4.28
+aiohttp==3.8.5
+asyncio==3.4.3
+websockets==11.0.3
+schedule==1.2.0
+plotly==5.16.1
+dash==2.13.0
+gunicorn==21.2.0

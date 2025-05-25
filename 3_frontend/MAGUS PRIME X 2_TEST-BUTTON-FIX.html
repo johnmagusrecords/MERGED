@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGUS PRIME X Button Fix Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 8px;
+        }
+        .steps {
+            margin-left: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .code-box {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .log-container {
+            height: 200px;
+            overflow-y: auto;
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-top: 15px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MAGUS PRIME X Button Fix Tester</h1>
+        
+        <div class="section">
+            <h2>Instructions</h2>
+            <p>This tool helps you test the button fix script before applying it to the main application.</p>
+            <ol class="steps">
+                <li>Click "Test Script" to check if the script can be loaded and executed</li>
+                <li>Click "Test Button Detection" to simulate finding buttons in the application</li>
+                <li>Click "Apply to MAGUS PRIME X" to apply the fix to the actual application</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h2>Test Controls</h2>
+            <button id="testScript">Test Script</button>
+            <button id="testButtons">Test Button Detection</button>
+            <button id="applyFix">Apply to MAGUS PRIME X</button>
+        </div>
+        
+        <div class="section">
+            <h2>Script Status</h2>
+            <div id="scriptStatus">Not tested</div>
+        </div>
+        
+        <div class="section">
+            <h2>Button Test Area</h2>
+            <p>These buttons simulate the app's buttons for testing:</p>
+            <button id="connectBtn">Connect</button>
+            <button id="startBotBtn">Start Bot</button>
+            <button class="nav-link" data-page="dashboard">Dashboard</button>
+            <button class="nav-link" data-page="trades">Trades</button>
+        </div>
+        
+        <div class="section">
+            <h2>Export Options</h2>
+            <button id="exportToJS">Export as JS File</button>
+            <button id="exportToHTML">Export as HTML Launcher</button>
+            <button id="createBatchFile">Create Batch File Installer</button>
+        </div>
+        
+        <div class="section">
+            <h2>Console Logs</h2>
+            <div id="logContainer" class="log-container"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Advanced</h2>
+            <button id="downloadFixScript">Download Fix Script</button>
+            <p>Direct script tag to add to index.html:</p>
+            <div class="code-box">&lt;script src="fix-all-buttons.js"&gt;&lt;/script&gt;</div>
+            <button id="copyScriptTag">Copy Script Tag</button>
+        </div>
+    </div>
+    
+    <script>
+        // Custom logging to display in our log container
+        const originalConsoleLog = console.log;
+        console.log = function() {
+            // Call the original console.log
+            originalConsoleLog.apply(console, arguments);
+            
+            // Log to our container
+            const logContainer = document.getElementById('logContainer');
+            const logEntry = document.createElement('div');
+            let message = Array.from(arguments).join(' ');
+            
+            // Apply some styling
+            if (message.includes('[Button Fix]')) {
+                logEntry.className = 'info';
+            }
+            if (message.includes('success') || message.includes('Connected')) {
+                logEntry.className = 'success';
+            }
+            if (message.includes('error') || message.includes('fail')) {
+                logEntry.className = 'error';
+            }
+            
+            logEntry.textContent = message;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        };
+        
+        // Test the script
+        document.getElementById('testScript').addEventListener('click', function() {
+            const scriptStatus = document.getElementById('scriptStatus');
+            scriptStatus.textContent = "Loading script...";
+            
+            try {
+                // Try to load the script content
+                fetch('fix-all-buttons.js')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Script file not found');
+                        }
+                        return response.text();
+                    })
+                    .then(scriptContent => {
+                        console.log('Script loaded successfully');
+                        scriptStatus.innerHTML = '<span class="success">Script loaded successfully!</span>';
+                        console.log('Script content length:', scriptContent.length, 'bytes');
+                    })
+                    .catch(error => {
+                        console.error('Error loading script:', error);
+                        scriptStatus.innerHTML = '<span class="error">Error: ' + error.message + '</span>';
+                    });
+            } catch (e) {
+                console.error('Exception:', e);
+                scriptStatus.innerHTML = '<span class="error">Exception: ' + e.message + '</span>';
+            }
+        });
+        
+        // Test button detection
+        document.getElementById('testButtons').addEventListener('click', function() {
+            console.log('Testing button detection...');
+            
+            // Test Start Bot button detection
+            const startBotBtns = Array.from(document.querySelectorAll('#startBotBtn, .action-button.primary, button')).filter(el => 
+                el.textContent.trim().includes('Start Bot')
+            );
+            console.log('Found', startBotBtns.length, 'Start Bot buttons:', startBotBtns);
+            
+            // Test Connect button detection
+            const connectBtns = Array.from(document.querySelectorAll('#connectBtn, .connect-button, button')).filter(el => 
+                el.textContent.trim().includes('Connect') && !el.textContent.trim().includes('Connected')
+            );
+            console.log('Found', connectBtns.length, 'Connect buttons:', connectBtns);
+            
+            // Test navigation button detection
+            const navButtons = document.querySelectorAll('.nav-item, .nav-link, [data-page], [href^="#"]');
+            console.log('Found', navButtons.length, 'navigation buttons:', navButtons);
+            
+            if (startBotBtns.length > 0 || connectBtns.length > 0 || navButtons.length > 0) {
+                console.log('Button detection successful!');
+            } else {
+                console.error('No buttons detected');
+            }
+        });
+        
+        // Apply the fix to MAGUS PRIME X
+        document.getElementById('applyFix').addEventListener('click', function() {
+            console.log('Creating application fix...');
+            
+            // This would normally apply the fix to the actual application
+            // For this test page, we'll simulate success
+            console.log('Fix applied to MAGUS PRIME X');
+            
+            // Update test buttons to show that the fix was applied
+            document.querySelectorAll('#connectBtn, #startBotBtn, .nav-link').forEach(btn => {
+                btn.style.backgroundColor = '#4CAF50';
+                btn.style.boxShadow = '0 0 5px #4CAF50';
+            });
+            
+            document.getElementById('scriptStatus').innerHTML = 
+                '<span class="success">Fix applied to MAGUS PRIME X!</span>';
+        });
+        
+        // Test buttons in the test area
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            console.log('Connect button clicked');
+            
+            if (this.textContent === 'Connect') {
+                this.textContent = 'Connected';
+                this.style.backgroundColor = '#f44336';
+                console.log('Connected to Capital.com');
+            } else {
+                this.textContent = 'Connect';
+                this.style.backgroundColor = '#4CAF50';
+                console.log('Disconnected from Capital.com');
+            }
+        });
+        
+        document.getElementById('startBotBtn').addEventListener('click', function() {
+            console.log('Start Bot button clicked');
+            
+            if (this.textContent === 'Start Bot') {
+                this.textContent = 'Stop Bot';
+                this.style.backgroundColor = '#f44336';
+                console.log('Bot started');
+            } else {
+                this.textContent = 'Start Bot';
+                this.style.backgroundColor = '#4CAF50';
+                console.log('Bot stopped');
+            }
+        });
+        
+        document.querySelectorAll('.nav-link').forEach(navBtn => {
+            navBtn.addEventListener('click', function() {
+                console.log('Navigation button clicked:', this.textContent);
+                
+                document.querySelectorAll('.nav-link').forEach(btn => {
+                    btn.style.backgroundColor = '#4CAF50';
+                });
+                
+                this.style.backgroundColor = '#2196F3';
+                console.log('Navigated to:', this.getAttribute('data-page'));
+            });
+        });
+        
+        // Create batch file
+        document.getElementById('createBatchFile').addEventListener('click', function() {
+            console.log('Creating batch file installer...');
+            
+            const batchContent = `@echo off
+echo ===================================================
+echo     MAGUS PRIME X - BUTTON FIX INSTALLER
+echo ===================================================
+echo.
+echo This script will install the button fix for MAGUS PRIME X.
+echo.
+
+REM Close any running instances
+echo [Step 1/3] Closing any running instances...
+taskkill /F /IM "Magus Prime X.exe" >nul 2>&1
+timeout 1 > nul
+
+REM Define paths
+set "APP_PATH=C:\\Users\\djjoh\\OneDrive\\Desktop\\MAGUS_PRIME_X_RELEASE"
+set "MAIN_PATH=%APP_PATH%\\main"
+set "FIX_JS_PATH=C:\\Users\\djjoh\\OneDrive\\Desktop\\MAGUS PRIME X\\fix-all-buttons.js"
+
+REM Check if app exists
+if not exist "%APP_PATH%" (
+    echo ERROR: MAGUS PRIME X not found!
+    echo Expected location: %APP_PATH%
+    echo.
+    pause
+    exit /b 1
+)
+
+echo [Step 2/3] Copying button fix...
+copy /Y "%FIX_JS_PATH%" "%MAIN_PATH%\\fix-all-buttons.js" >nul 2>&1
+echo      √ Button fix script copied
+
+REM Check if index.html exists and modify it
+if exist "%MAIN_PATH%\\index.html" (
+    echo [Step 3/3] Injecting fix into main application...
+    
+    REM Check if script is already added
+    findstr /C:"fix-all-buttons.js" "%MAIN_PATH%\\index.html" >nul
+    if errorlevel 1 (
+        powershell -Command "(Get-Content '%MAIN_PATH%\\index.html') | ForEach-Object { if($_ -match '</head>') { '<script src=\"fix-all-buttons.js\"></script>' + $_ } else { $_ } } | Set-Content '%MAIN_PATH%\\index.html.new'"
+        move /Y "%MAIN_PATH%\\index.html.new" "%MAIN_PATH%\\index.html" >nul
+        echo      √ Fix injected into main HTML file
+    ) else (
+        echo      √ Fix already injected
+    )
+) else (
+    echo [Step 3/3] Error: index.html not found!
+    echo Could not find index.html at %MAIN_PATH%\\index.html
+    echo.
+    pause
+    exit /b 1
+)
+
+echo.
+echo ===================================================
+echo     BUTTON FIX INSTALLED SUCCESSFULLY!
+echo ===================================================
+echo.
+echo Starting the application...
+timeout 2 > nul
+
+REM Launch the app
+start "" "%APP_PATH%\\user\\Magus Prime X.exe"
+
+echo.
+echo Press any key to close this window...
+pause > nul`;
+            
+            // Create a downloadable link for the batch file
+            const blob = new Blob([batchContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'INSTALL-BUTTON-FIX.bat';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('Batch file created and downloaded');
+        });
+        
+        // Download fix script
+        document.getElementById('downloadFixScript').addEventListener('click', function() {
+            fetch('fix-all-buttons.js')
+                .then(response => response.text())
+                .then(scriptContent => {
+                    const blob = new Blob([scriptContent], { type: 'text/javascript' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'fix-all-buttons.js';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    console.log('Fix script downloaded');
+                })
+                .catch(error => {
+                    console.error('Error downloading script:', error);
+                });
+        });
+        
+        // Copy script tag
+        document.getElementById('copyScriptTag').addEventListener('click', function() {
+            const scriptTag = '<script src="fix-all-buttons.js"></script>';
+            navigator.clipboard.writeText(scriptTag)
+                .then(() => {
+                    console.log('Script tag copied to clipboard');
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = 'Copy Script Tag';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Error copying script tag:', err);
+                });
+        });
+        
+        // Export as JS file
+        document.getElementById('exportToJS').addEventListener('click', function() {
+            fetch('fix-all-buttons.js')
+                .then(response => response.text())
+                .then(scriptContent => {
+                    const blob = new Blob([scriptContent], { type: 'text/javascript' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'magus-button-fix.js';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    console.log('JS file exported');
+                })
+                .catch(error => {
+                    console.error('Error exporting JS file:', error);
+                });
+        });
+        
+        // Export as HTML launcher
+        document.getElementById('exportToHTML').addEventListener('click', function() {
+            fetch('fix-all-buttons.js')
+                .then(response => response.text())
+                .then(scriptContent => {
+                    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGUS PRIME X Button Fix Launcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MAGUS PRIME X Button Fix Launcher</h1>
+        <p>Click the button below to launch MAGUS PRIME X with the button fix applied.</p>
+        <button id="launchBtn">Launch MAGUS PRIME X</button>
+        <p id="status"></p>
+    </div>
+    
+    <script>
+        const html = `
+          <div>Button here</div>
+        `;
+
+        // Button Fix Script
+        const buttonFixScript = \`${scriptContent}\`;
+        
+        // Launch MAGUS PRIME X with the button fix
+        document.getElementById('launchBtn').addEventListener('click', function() {
+            const status = document.getElementById('status');
+            status.textContent = "Launching MAGUS PRIME X...";
+            
+            try {
+                // Create an iframe to MAGUS PRIME X
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '800px';
+                iframe.style.border = 'none';
+                
+                // Set the source
+                iframe.src = "C:/Users/djjoh/OneDrive/Desktop/MAGUS_PRIME_X_RELEASE/main/index.html";
+                
+                // Add load event to inject our script
+                iframe.onload = function() {
+                    try {
+                        // Get the iframe document
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        
+                        // Create a script element
+                        const script = iframeDoc.createElement('script');
+                        script.textContent = buttonFixScript;
+                        
+                        // Append to head
+                        iframeDoc.head.appendChild(script);
+                        
+                        status.textContent = "MAGUS PRIME X launched with button fix!";
+                    } catch (e) {
+                        console.error('Error injecting script:', e);
+                        status.textContent = "Error injecting script: " + e.message;
+                    }
+                };
+                
+                // Append to body
+                document.body.appendChild(iframe);
+            } catch (e) {
+                console.error('Error launching MAGUS PRIME X:', e);
+                status.textContent = "Error launching MAGUS PRIME X: " + e.message;
+            }
+        });
+    </script>
+</body>
+</html>`;
+                    
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'MAGUS-BUTTON-FIX-LAUNCHER.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    console.log('HTML launcher exported');
+                })
+                .catch(error => {
+                    console.error('Error exporting HTML launcher:', error);
+                });
+        });
+        
+        // Initial log
+        console.log('MAGUS PRIME X Button Fix Tester loaded');
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "exclude": ["**/tensorflow_env/**", "**/.venv/**"],
+  "typeCheckingMode": "off",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false,
+  "reportInvalidTypeForm": false,
+  "pythonVersion": "3.8",
+  "ignore": [
+    "**/tensorflow_env/**",
+    "lib/site-packages",
+    "**/.venv/Lib/site-packages/**"
+  ]
+}

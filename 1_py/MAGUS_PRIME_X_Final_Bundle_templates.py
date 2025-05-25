@@ -1,0 +1,1 @@
+# Markdown-safe bilingual templates

@@ -1,0 +1,1 @@
+{ "XAUUSD": { "type": "Commodities", "strategy": "Breakout", "hold": "2h" } }

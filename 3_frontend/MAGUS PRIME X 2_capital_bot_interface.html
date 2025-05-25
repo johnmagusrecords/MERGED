@@ -1,0 +1,1498 @@
+CAPITAL_API_KEY=ZhNNE4pnHX1Ku67d CAPITAL_API_PASSWORD=@boutonY27
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Capital.com Trading Bot</title>
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --success-color: #2ecc71;
+        --danger-color: #e74c3c;
+        --warning-color: #f39c12;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .card-header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      input,
+      select,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      button.success {
+        background-color: var(--success-color);
+      }
+
+      button.success:hover {
+        background-color: #27ae60;
+      }
+
+      button.danger {
+        background-color: var(--danger-color);
+      }
+
+      button.danger:hover {
+        background-color: #c0392b;
+      }
+
+      button.warning {
+        background-color: var(--warning-color);
+      }
+
+      button.warning:hover {
+        background-color: #d35400;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .status {
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+
+      .status.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+      }
+
+      .status.info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .logs {
+        height: 200px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table th,
+      table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tab-buttons {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .tab-button {
+        padding: 10px 15px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .tab-button.active {
+        border-bottom: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+      }
+
+      .tab-content {
+        display: none;
+        padding: 15px 0;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25em 0.6em;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .badge.green {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .badge.red {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .badge.yellow {
+        background-color: var(--warning-color);
+        color: white;
+      }
+
+      .badge.blue {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>MAGUS PRIME X</h1>
+        <p>Capital.com Trading Bot Interface</p>
+      </header>
+
+      <div class="grid">
+        <div>
+          <div class="card">
+            <div class="card-header">Capital.com Authentication</div>
+            <div class="form-group">
+              <label for="apiKey">API Key</label>
+              <input type="text" id="apiKey" value="ZhNNE4pnHX1Ku67d" />
+            </div>
+            <div class="form-group">
+              <label for="identifier">Username/Email</label>
+              <input
+                type="text"
+                id="identifier"
+                placeholder="Your Capital.com username"
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Your Capital.com password"
+              />
+            </div>
+            <div class="form-group">
+              <label for="apiUrl">API URL</label>
+              <input
+                type="text"
+                id="apiUrl"
+                value="https://api-capital.backend-capital.com/api/v1"
+              />
+            </div>
+            <button id="btnConnect" class="success">
+              Connect to Capital.com
+            </button>
+            <div id="authStatus" class="status" style="display: none"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">Account Information</div>
+            <div id="accountInfo">
+              <p>Not connected. Please authenticate first.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">Trading Strategy</div>
+            <div class="form-group">
+              <label for="strategySelect">Strategy</label>
+              <select id="strategySelect">
+                <option value="safe">Safe (1% Risk)</option>
+                <option value="balanced" selected>Balanced (2% Risk)</option>
+                <option value="aggressive">Aggressive (3% Risk)</option>
+              </select>
+            </div>
+            <div id="strategyInfo">
+              <p>
+                <strong>Risk per Trade:</strong>
+                <span id="riskPercent">2.0</span>%
+              </p>
+              <p>
+                <strong>Stop Loss Distance:</strong>
+                <span id="slMultiplier">1.5</span>x ATR
+              </p>
+              <p>
+                <strong>Take Profit Distance:</strong>
+                <span id="tpMultiplier">2.5</span>x ATR
+              </p>
+              <p>
+                <strong>Breakeven Trigger:</strong>
+                <span id="bePercent">1.0</span>%
+              </p>
+              <p>
+                <strong>TP Trailing Step:</strong>
+                <span id="tpPercent">0.5</span>%
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="tab-container">
+            <div class="tab-buttons">
+              <button class="tab-button active" data-tab="trade">
+                Execute Trade
+              </button>
+              <button class="tab-button" data-tab="positions">
+                Open Positions
+              </button>
+              <button class="tab-button" data-tab="analyze">
+                Market Analysis
+              </button>
+              <button class="tab-button" data-tab="logs">Logs</button>
+            </div>
+
+            <div id="tradeTab" class="tab-content active">
+              <div class="card">
+                <div class="card-header">Execute Trade</div>
+                <div class="form-group">
+                  <label for="symbolInput">Symbol (e.g., EURUSD, BTCUSD)</label>
+                  <input
+                    type="text"
+                    id="symbolInput"
+                    placeholder="Enter symbol"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="directionSelect">Direction</label>
+                  <select id="directionSelect">
+                    <option value="BUY">BUY</option>
+                    <option value="SELL">SELL</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="positionSizeInput"
+                    >Position Size (Leave blank for automatic
+                    calculation)</label
+                  >
+                  <input
+                    type="number"
+                    id="positionSizeInput"
+                    placeholder="Auto-calculate based on risk"
+                  />
+                </div>
+                <button id="btnAnalyzeMarket">Analyze Market</button>
+                <div
+                  id="analysisResult"
+                  class="status"
+                  style="display: none"
+                ></div>
+                <div id="tradePreview" style="display: none; margin-top: 15px">
+                  <h3>Trade Preview</h3>
+                  <p>
+                    <strong>Symbol:</strong> <span id="previewSymbol"></span>
+                  </p>
+                  <p>
+                    <strong>Direction:</strong>
+                    <span id="previewDirection"></span>
+                  </p>
+                  <p>
+                    <strong>Entry Price:</strong>
+                    <span id="previewEntry"></span>
+                  </p>
+                  <p>
+                    <strong>Position Size:</strong>
+                    <span id="previewSize"></span>
+                  </p>
+                  <p>
+                    <strong>Stop Loss:</strong> <span id="previewSL"></span>
+                  </p>
+                  <p>
+                    <strong>Take Profit:</strong> <span id="previewTP"></span>
+                  </p>
+                  <p>
+                    <strong>Risk Amount:</strong>
+                    <span id="previewRiskAmount"></span>
+                  </p>
+                  <button id="btnExecuteTrade" class="success">
+                    Execute Trade
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="positionsTab" class="tab-content">
+              <div class="card">
+                <div class="card-header">Open Positions</div>
+                <button id="btnRefreshPositions">Refresh Positions</button>
+                <div id="positionsTableContainer" style="margin-top: 15px">
+                  <table id="positionsTable">
+                    <thead>
+                      <tr>
+                        <th>Symbol</th>
+                        <th>Direction</th>
+                        <th>Size</th>
+                        <th>Entry</th>
+                        <th>Current</th>
+                        <th>P/L</th>
+                        <th>SL</th>
+                        <th>TP</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="positionsBody">
+                      <tr>
+                        <td colspan="9">No open positions</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div id="analyzeTab" class="tab-content">
+              <div class="card">
+                <div class="card-header">Market Analysis</div>
+                <div class="form-group">
+                  <label for="analyzeSymbolInput">Symbol</label>
+                  <input
+                    type="text"
+                    id="analyzeSymbolInput"
+                    placeholder="Enter symbol to analyze"
+                  />
+                </div>
+                <button id="btnRunAnalysis">Run Analysis</button>
+                <div id="marketAnalysisResult" style="margin-top: 15px"></div>
+              </div>
+            </div>
+
+            <div id="logsTab" class="tab-content">
+              <div class="card">
+                <div class="card-header">Activity Logs</div>
+                <div id="logContainer" class="logs"></div>
+                <button
+                  id="btnClearLogs"
+                  class="warning"
+                  style="margin-top: 10px"
+                >
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">Position Monitoring</div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="monitoringEnabled" checked />
+                Enable position monitoring (Breakeven and Trailing Stop)
+              </label>
+            </div>
+            <div id="monitoringStatus">
+              <p>
+                Position monitoring is
+                <span id="monitorStatus" class="badge green">ACTIVE</span>
+              </p>
+              <p>
+                Update interval: <span id="monitorInterval">30</span> seconds
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    // Capital.com API Integration
+    const bot = {
+      // Authentication details
+      auth: {
+        apiKey: "",
+        identifier: "",
+        password: "",
+        apiUrl: "",
+        cst: "",
+        securityToken: "",
+        accountId: "",
+        authenticated: false,
+      },
+
+      // Trading strategy configuration
+      strategy: {
+        type: "balanced",
+        riskPercent: 2.0,
+        slMultiplier: 1.5,
+        tpMultiplier: 2.5,
+        breakEvenPercent: 1.0,
+        trailingPercent: 0.5,
+      },
+
+      // Account information
+      account: {
+        balance: 0,
+        currency: "",
+        profitLoss: 0,
+        availableToTrade: 0,
+      },
+
+      // Market data storage
+      marketData: {
+        currentSymbol: "",
+        price: 0,
+        atr: 0,
+        bid: 0,
+        ask: 0,
+        direction: "",
+        epicId: "",
+      },
+
+      // Position monitoring
+      monitoring: {
+        enabled: true,
+        interval: 30,
+        timer: null,
+        positions: [],
+      },
+
+      // Utility methods
+      utils: {
+        // Format number with specified decimals
+        formatNumber: (num, decimals = 2) => {
+          return parseFloat(num).toFixed(decimals);
+        },
+
+        // Log to the console and UI
+        log: (message, type = "info") => {
+          const logContainer = document.getElementById("logContainer");
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement("div");
+          logEntry.className = type;
+          logEntry.innerHTML = `[${timestamp}] ${message}`;
+          logContainer.appendChild(logEntry);
+          logContainer.scrollTop = logContainer.scrollHeight;
+          console.log(`[${timestamp}] ${message}`);
+        },
+
+        // Show status message
+        showStatus: (message, type, elementId) => {
+          const statusElement = document.getElementById(elementId);
+          statusElement.className = `status ${type}`;
+          statusElement.textContent = message;
+          statusElement.style.display = "block";
+        },
+      },
+
+      // API communication
+      api: {
+        _request: async (path, method = "GET", body = null) => {
+          const url = `${bot.auth.apiUrl}${path}`;
+          const options = {
+            method: method,
+            headers: {
+              "X-CAP-API-KEY": bot.auth.apiKey,
+              "Content-Type": "application/json",
+              CST: bot.auth.cst,
+              "X-SECURITY-TOKEN": bot.auth.securityToken,
+            },
+          };
+
+          if (body) options.body = JSON.stringify(body);
+
+          try {
+            const response = await fetch(url, options);
+
+            if (response.status >= 500) {
+              throw new Error(`Server error ${response.status}`);
+            }
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.errorCode || "API request failed");
+            }
+
+            return await response.json();
+          } catch (error) {
+            bot.utils.log(`API error: ${error.message}`, "error");
+            throw error;
+          }
+        },
+
+        authenticate: async () => {
+          try {
+            bot.utils.log("Starting authentication...");
+
+            const response = await fetch(`${bot.auth.apiUrl}/session`, {
+              method: "POST",
+              headers: {
+                "X-CAP-API-KEY": bot.auth.apiKey,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                identifier: bot.auth.identifier,
+                password: bot.auth.password,
+              }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              const errorCode = errorData.errorCode || "unknown.error";
+              throw new Error(`Capital.com error: ${errorCode}`);
+            }
+
+            bot.auth.cst = response.headers.get("CST");
+            bot.auth.securityToken = response.headers.get("X-SECURITY-TOKEN");
+
+            if (!bot.auth.cst || !bot.auth.securityToken) {
+              throw new Error("Missing security tokens");
+            }
+
+            bot.auth.authenticated = true;
+            bot.utils.log("Authentication successful!", "success");
+            bot.utils.showStatus(
+              "Connected successfully",
+              "success",
+              "authStatus",
+            );
+
+            await bot.api.getAccountInfo();
+            return true;
+          } catch (error) {
+            bot.utils.log(`Auth failed: ${error.message}`, "error");
+            bot.utils.showStatus(
+              `Failed: ${error.message}`,
+              "error",
+              "authStatus",
+            );
+            return false;
+          }
+        },
+
+        getAccountInfo: async () => {
+          try {
+            const data = await bot.api._request("/accounts");
+            const account = data.accounts?.[0];
+
+            if (!account) throw new Error("No account found");
+
+            bot.auth.accountId = account.accountId;
+            bot.account.balance = account.balance.balance;
+            bot.account.currency = account.currency;
+
+            document.getElementById("accountInfo").innerHTML = `
+                    <p>Account: ${account.accountId}</p>
+                    <p>Balance: ${bot.utils.formatNumber(account.balance.balance)} ${account.currency}</p>
+                    <p>Available: ${bot.utils.formatNumber(account.balance.available)} ${account.currency}</p>
+                `;
+
+            return true;
+          } catch (error) {
+            bot.utils.log(`Account error: ${error.message}`, "error");
+            return false;
+          }
+        },
+
+        // Get market information
+        getMarketInfo: async (symbol) => {
+          try {
+            if (!bot.auth.authenticated) {
+              throw new Error("Not authenticated");
+            }
+
+            bot.utils.log(`Fetching market information for ${symbol}...`);
+
+            // First, search for the market to get the epic ID
+            const searchResponse = await fetch(
+              `${bot.auth.apiUrl}/markets?searchTerm=${encodeURIComponent(symbol)}`,
+              {
+                method: "GET",
+                headers: {
+                  "X-CAP-API-KEY": bot.auth.apiKey,
+                  CST: bot.auth.cst,
+                  "X-SECURITY-TOKEN": bot.auth.securityToken,
+                },
+              },
+            );
+
+            if (!searchResponse.ok) {
+              const errorData = await searchResponse.json();
+              throw new Error(
+                `Failed to search market: ${errorData.errorCode || "Unknown error"}`,
+              );
+            }
+
+            const searchData = await searchResponse.json();
+
+            if (!searchData.markets || searchData.markets.length === 0) {
+              throw new Error(`Symbol ${symbol} not found`);
+            }
+
+            // Use the first matching market
+            const market = searchData.markets[0];
+            const epicId = market.epic;
+
+            // Get detailed market information
+            const marketResponse = await fetch(
+              `${bot.auth.apiUrl}/markets/${epicId}`,
+              {
+                method: "GET",
+                headers: {
+                  "X-CAP-API-KEY": bot.auth.apiKey,
+                  CST: bot.auth.cst,
+                  "X-SECURITY-TOKEN": bot.auth.securityToken,
+                },
+              },
+            );
+
+            if (!marketResponse.ok) {
+              const errorData = await marketResponse.json();
+              throw new Error(
+                `Failed to get market details: ${errorData.errorCode || "Unknown error"}`,
+              );
+            }
+
+            const marketData = await marketResponse.json();
+
+            // Store market information
+            bot.marketData.currentSymbol = symbol;
+            bot.marketData.epicId = epicId;
+            bot.marketData.bid = marketData.snapshot.bid;
+            bot.marketData.ask = marketData.snapshot.offer;
+            bot.marketData.price =
+              (bot.marketData.bid + bot.marketData.ask) / 2;
+
+            bot.utils.log(
+              `Market information retrieved for ${symbol}: Bid ${bot.marketData.bid}, Ask ${bot.marketData.ask}`,
+            );
+
+            // Calculate ATR (this would normally require historical data)
+            // For demo purposes, we'll use a simple approximation
+            bot.marketData.atr =
+              (marketData.snapshot.high - marketData.snapshot.low) / 10;
+
+            return true;
+          } catch (error) {
+            bot.utils.log(`Market info error: ${error.message}`, "error");
+            bot.utils.showStatus(
+              `Error: ${error.message}`,
+              "error",
+              "analysisResult",
+            );
+            return false;
+          }
+        },
+
+        // Execute a trade
+        executeTrade: async (symbol, action, price) => {
+          const lotSize = bot.lotSizes[symbol] || bot.defaultLotSize;
+          const minDistance = await bot.api.getMinDistance(symbol);
+          if (minDistance === null) {
+            bot.utils.log(
+              `Failed to get minimum distance for ${symbol}.`,
+              "error",
+            );
+            return;
+          }
+
+          let tp = action === "BUY" ? price * 1.005 : price * 0.995;
+          let sl = action === "BUY" ? price * 0.995 : price * 1.005;
+
+          // Ensure TP & SL meet minimum distance
+          if (Math.abs(tp - price) < minDistance) {
+            tp = action === "BUY" ? price + minDistance : price - minDistance;
+          }
+          if (Math.abs(sl - price) < minDistance) {
+            sl = action === "BUY" ? price - minDistance : price + minDistance;
+          }
+
+          const payload = {
+            epic: symbol,
+            direction: action,
+            size: lotSize,
+            stopLevel: sl,
+            profitLevel: tp,
+            guaranteedStop: false,
+            trailingStop: false,
+            forceOpen: true,
+          };
+
+          bot.utils.log(
+            `Sending trade request: ${JSON.stringify(payload)}`,
+            "info",
+          );
+
+          try {
+            const response = await bot.api._request(
+              "/positions",
+              "POST",
+              payload,
+            );
+            if (response.dealReference) {
+              bot.utils.log(
+                `Trade executed: ${action} ${symbol} at ${price} | TP: ${tp} | SL: ${sl}`,
+                "success",
+              );
+              await bot.api.verifyPositionAndOrders(response.dealReference);
+            } else {
+              bot.utils.log(
+                "No deal reference returned. Cannot verify position.",
+                "warning",
+              );
+            }
+          } catch (error) {
+            bot.utils.log(`Trade execution failed: ${error.message}`, "error");
+          }
+        },
+
+        // Get open positions
+        getPositions: async () => {
+          try {
+            if (!bot.auth.authenticated) {
+              throw new Error("Not authenticated");
+            }
+
+            bot.utils.log("Fetching open positions...");
+
+            const response = await fetch(`${bot.auth.apiUrl}/positions`, {
+              method: "GET",
+              headers: {
+                "X-CAP-API-KEY": bot.auth.apiKey,
+                CST: bot.auth.cst,
+                "X-SECURITY-TOKEN": bot.auth.securityToken,
+              },
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                `Failed to fetch positions: ${errorData.errorCode || "Unknown error"}`,
+              );
+            }
+
+            const data = await response.json();
+            bot.monitoring.positions = data.positions || [];
+
+            // Update positions table
+            const positionsBody = document.getElementById("positionsBody");
+
+            if (bot.monitoring.positions.length === 0) {
+              positionsBody.innerHTML =
+                '<tr><td colspan="9">No open positions</td></tr>';
+              bot.utils.log("No open positions found");
+            } else {
+              positionsBody.innerHTML = "";
+
+              bot.monitoring.positions.forEach((position) => {
+                const tr = document.createElement("tr");
+                const profitLoss = position.position.profit.value;
+                const plClass = profitLoss >= 0 ? "green" : "red";
+
+                tr.innerHTML = `
+                            <td>${position.market.instrumentName}</td>
+                            <td>${position.position.direction}</td>
+                            <td>${position.position.size}</td>
+                            <td>${bot.utils.formatNumber(position.position.level)}</td>
+                            <td>${bot.utils.formatNumber(position.market.offer)}</td>
+                            <td class="${plClass}">${bot.utils.formatNumber(profitLoss)}</td>
+                            <td>${bot.utils.formatNumber(position.position.stopLevel)}</td>
+                            <td>${bot.utils.formatNumber(position.position.limitLevel)}</td>
+                            <td>
+                                <button class="btn-close-position" data-dealid="${position.position.dealId}">Close</button>
+                                <button class="btn-modify-position" data-dealid="${position.position.dealId}">Modify</button>
+                            </td>
+                        `;
+
+                positionsBody.appendChild(tr);
+              });
+
+              // Add event listeners to the close/modify buttons
+              document
+                .querySelectorAll(".btn-close-position")
+                .forEach((button) => {
+                  button.addEventListener("click", (e) => {
+                    const dealId = e.target.getAttribute("data-dealid");
+                    bot.api.closePosition(dealId);
+                  });
+                });
+
+              document
+                .querySelectorAll(".btn-modify-position")
+                .forEach((button) => {
+                  button.addEventListener("click", (e) => {
+                    const dealId = e.target.getAttribute("data-dealid");
+                    // Show modal or prompt for modification
+                    alert("Position modification not implemented in demo");
+                  });
+                });
+
+              bot.utils.log(
+                `Retrieved ${bot.monitoring.positions.length} open positions`,
+              );
+            }
+
+            return true;
+          } catch (error) {
+            bot.utils.log(
+              `Position retrieval error: ${error.message}`,
+              "error",
+            );
+            return false;
+          }
+        },
+
+        // Close a position
+        closePosition: async (dealId) => {
+          try {
+            if (!bot.auth.authenticated) {
+              throw new Error("Not authenticated");
+            }
+
+            bot.utils.log(`Closing position with deal ID: ${dealId}...`);
+
+            // Find the position to get the epic and direction
+            const position = bot.monitoring.positions.find(
+              (p) => p.position.dealId === dealId,
+            );
+
+            if (!position) {
+              throw new Error("Position not found");
+            }
+
+            // Direction needs to be the opposite of the current position
+            const direction =
+              position.position.direction === "BUY" ? "SELL" : "BUY";
+
+            const requestBody = {
+              dealId: dealId,
+              epic: position.market.epic,
+              expiry: "-",
+              direction: direction,
+              size: position.position.size,
+              orderType: "MARKET",
+              timeInForce: "FILL_OR_KILL",
+              quoteId: null,
+            };
+
+            const response = await fetch(
+              `${bot.auth.apiUrl}/positions/${dealId}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CAP-API-KEY": bot.auth.apiKey,
+                  CST: bot.auth.cst,
+                  "X-SECURITY-TOKEN": bot.auth.securityToken,
+                  Version: "1",
+                },
+                body: JSON.stringify(requestBody),
+              },
+            );
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                `Position close failed: ${errorData.errorCode || "Unknown error"}`,
+              );
+            }
+
+            const data = await response.json();
+
+            if (data.dealStatus === "ACCEPTED") {
+              bot.utils.log(
+                `Position closed successfully: Deal ID ${dealId}`,
+                "success",
+              );
+
+              // Update positions
+              await bot.api.getPositions();
+              return true;
+            } else {
+              throw new Error(
+                `Position close not accepted: ${data.reason || "Unknown reason"}`,
+              );
+            }
+          } catch (error) {
+            bot.utils.log(`Position close error: ${error.message}`, "error");
+            return false;
+          }
+        },
+
+        // Update position stop loss and take profit
+        updatePositionLevels: async (dealId, stopLevel, profitLevel) => {
+          try {
+            if (!bot.auth.authenticated) {
+              throw new Error("Not authenticated");
+            }
+
+            bot.utils.log(`Updating position levels for deal ID: ${dealId}...`);
+
+            const requestBody = {
+              stopLevel: stopLevel.toString(),
+              profitLevel: profitLevel.toString(),
+              trailingStop: false,
+              trailingStopDistance: null,
+            };
+
+            const response = await fetch(
+              `${bot.auth.apiUrl}/positions/${dealId}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CAP-API-KEY": bot.auth.apiKey,
+                  CST: bot.auth.cst,
+                  "X-SECURITY-TOKEN": bot.auth.securityToken,
+                  Version: "2",
+                },
+                body: JSON.stringify(requestBody),
+              },
+            );
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                `Position update failed: ${errorData.errorCode || "Unknown error"}`,
+              );
+            }
+
+            const data = await response.json();
+
+            if (data.status === "SUCCESS") {
+              bot.utils.log(
+                `Position levels updated successfully: Deal ID ${dealId}`,
+                "success",
+              );
+              return true;
+            } else {
+              throw new Error(
+                `Position update not accepted: ${data.reason || "Unknown reason"}`,
+              );
+            }
+          } catch (error) {
+            bot.utils.log(`Position update error: ${error.message}`, "error");
+            return false;
+          }
+        },
+      },
+
+      // Trading functionality
+      trading: {
+        // Calculate position size based on risk
+        calculatePositionSize: (price, stopLoss, riskPercent) => {
+          const accountBalance = bot.account.availableToTrade;
+          const riskAmount = accountBalance * (riskPercent / 100);
+          const priceDifference = Math.abs(price - stopLoss);
+
+          // Calculate position size based on risk and price difference
+          const positionSize = riskAmount / priceDifference;
+
+          // Round to 2 decimal places
+          return Math.round(positionSize * 100) / 100;
+        },
+
+        // Analyze market and provide trade suggestions
+        analyzeMarket: async (symbol) => {
+          try {
+            if (!bot.auth.authenticated) {
+              throw new Error("Not authenticated");
+            }
+
+            bot.utils.log(`Analyzing market for ${symbol}...`);
+
+            // Get market information
+            await bot.api.getMarketInfo(symbol);
+
+            // For demo purposes, we'll use a simple analysis based on price momentum
+            // In a real system, this would use technical indicators from your Chart Analyzer
+            const marketResult = document.getElementById(
+              "marketAnalysisResult",
+            );
+
+            // Random analysis for demo purposes
+            const random = Math.random();
+            let signal, confidence, recommendation;
+
+            if (random > 0.6) {
+              signal = "BUY";
+              confidence = Math.round(random * 100);
+              recommendation =
+                "The market shows bullish momentum with potential for upward movement.";
+            } else if (random < 0.4) {
+              signal = "SELL";
+              confidence = Math.round(random * 100);
+              recommendation =
+                "The market shows bearish momentum with potential for downward movement.";
+            } else {
+              signal = "NEUTRAL";
+              confidence = Math.round(random * 50);
+              recommendation =
+                "The market shows mixed signals, consider waiting for clearer direction.";
+            }
+
+            const signalClass =
+              signal === "BUY"
+                ? "success"
+                : signal === "SELL"
+                  ? "danger"
+                  : "warning";
+
+            marketResult.innerHTML = `
+                    <div class="status ${signalClass}" style="display: block;">
+                        <h3>Analysis for ${symbol}</h3>
+                        <p><strong>Current Price:</strong> ${bot.utils.formatNumber(bot.marketData.price)}</p>
+                        <p><strong>Signal:</strong> <span class="badge ${signalClass === "success" ? "green" : signalClass === "danger" ? "red" : "yellow"}">${signal}</span></p>
+                        <p><strong>Confidence:</strong> ${confidence}%</p>
+                        <p><strong>ATR:</strong> ${bot.utils.formatNumber(bot.marketData.atr)}</p>
+                        <p><strong>Recommendation:</strong> ${recommendation}</p>
+                    </div>
+                `;
+
+            bot.utils.log(
+              `Market analysis completed for ${symbol}: Signal ${signal}, Confidence ${confidence}%`,
+            );
+            return true;
+          } catch (error) {
+            bot.utils.log(`Market analysis error: ${error.message}`, "error");
+            return false;
+          }
+        },
+
+        // Start position monitoring
+        startMonitoring: () => {
+          if (bot.monitoring.timer) {
+            clearInterval(bot.monitoring.timer);
+          }
+
+          bot.monitoring.timer = setInterval(async () => {
+            if (!bot.monitoring.enabled || !bot.auth.authenticated) {
+              return;
+            }
+
+            // Get current positions
+            await bot.api.getPositions();
+
+            // Check if we need to update any positions (breakeven, trailing stop, etc.)
+            if (bot.monitoring.positions.length > 0) {
+              bot.utils.log("Checking positions for automated management...");
+
+              for (const position of bot.monitoring.positions) {
+                const dealId = position.position.dealId;
+                const entryPrice = position.position.level;
+                const currentPrice = position.market.offer;
+                const direction = position.position.direction;
+                const stopLevel = position.position.stopLevel;
+                const profitLevel = position.position.limitLevel;
+
+                // Calculate price movement in direction of trade
+                const priceMovement =
+                  direction === "BUY"
+                    ? ((currentPrice - entryPrice) / entryPrice) * 100
+                    : ((entryPrice - currentPrice) / entryPrice) * 100;
+
+                // Check if we need to move to breakeven
+                if (priceMovement >= bot.strategy.breakEvenPercent) {
+                  // If stop loss is still below entry (for buy) or above entry (for sell)
+                  const shouldMoveToBreakeven =
+                    direction === "BUY"
+                      ? stopLevel < entryPrice
+                      : stopLevel > entryPrice;
+
+                  if (shouldMoveToBreakeven) {
+                    bot.utils.log(
+                      `Moving stop loss to breakeven for ${position.market.instrumentName}`,
+                      "info",
+                    );
+                    await bot.api.updatePositionLevels(
+                      dealId,
+                      entryPrice,
+                      profitLevel,
+                    );
+                  }
+                }
+
+                // Implement trailing take profit
+                // This would move the take profit level as the price moves in favorable direction
+                if (priceMovement >= bot.strategy.trailingPercent * 2) {
+                  // Only adjust if price has moved significantly in our favor
+                  const newProfitLevel =
+                    direction === "BUY"
+                      ? currentPrice * 1.01 // Move take profit up for buys
+                      : currentPrice * 0.99; // Move take profit down for sells
+
+                  // Only update if the new level is better than current
+                  const shouldUpdateTP =
+                    direction === "BUY"
+                      ? newProfitLevel > profitLevel
+                      : newProfitLevel < profitLevel;
+
+                  if (shouldUpdateTP) {
+                    bot.utils.log(
+                      `Trailing take profit for ${position.market.instrumentName}`,
+                      "info",
+                    );
+                    await bot.api.updatePositionLevels(
+                      dealId,
+                      stopLevel,
+                      newProfitLevel,
+                    );
+                  }
+                }
+              }
+            }
+          }, bot.monitoring.interval * 1000);
+
+          bot.utils.log(
+            `Position monitoring started with ${bot.monitoring.interval} second interval`,
+          );
+          document.getElementById("monitorStatus").className = "badge green";
+          document.getElementById("monitorStatus").textContent = "ACTIVE";
+        },
+
+        // Stop position monitoring
+        stopMonitoring: () => {
+          if (bot.monitoring.timer) {
+            clearInterval(bot.monitoring.timer);
+            bot.monitoring.timer = null;
+            bot.utils.log("Position monitoring stopped");
+            document.getElementById("monitorStatus").className = "badge red";
+            document.getElementById("monitorStatus").textContent = "INACTIVE";
+          }
+        },
+      },
+    };
+
+    // Initialize event listeners for UI
+    document.addEventListener("DOMContentLoaded", () => {
+      // Tab switching
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const tab = button.getAttribute("data-tab");
+
+          tabButtons.forEach((btn) => btn.classList.remove("active"));
+          tabContents.forEach((content) => content.classList.remove("active"));
+
+          button.classList.add("active");
+
+          const activeTab = document.getElementById(`${tab}Tab`);
+          if (activeTab) {
+            activeTab.classList.add("active");
+          }
+        });
+      });
+
+      // Strategy selection
+      const strategySelect = document.getElementById("strategySelect");
+      strategySelect.addEventListener("change", () => {
+        const strategy = strategySelect.value;
+
+        switch (strategy) {
+          case "safe":
+            bot.strategy.riskPercent = 1.0;
+            bot.strategy.slMultiplier = 1.0;
+            bot.strategy.tpMultiplier = 2.0;
+            bot.strategy.breakEvenPercent = 0.5;
+            bot.strategy.trailingPercent = 0.25;
+            break;
+          case "balanced":
+            bot.strategy.riskPercent = 2.0;
+            bot.strategy.slMultiplier = 1.5;
+            bot.strategy.tpMultiplier = 2.5;
+            bot.strategy.breakEvenPercent = 1.0;
+            bot.strategy.trailingPercent = 0.5;
+            break;
+          case "aggressive":
+            bot.strategy.riskPercent = 3.0;
+            bot.strategy.slMultiplier = 2.0;
+            bot.strategy.tpMultiplier = 3.0;
+            bot.strategy.breakEvenPercent = 1.5;
+            bot.strategy.trailingPercent = 0.75;
+            break;
+        }
+
+        // Update strategy info display
+        document.getElementById("riskPercent").textContent =
+          bot.strategy.riskPercent.toFixed(1);
+        document.getElementById("slMultiplier").textContent =
+          bot.strategy.slMultiplier.toFixed(1);
+        document.getElementById("tpMultiplier").textContent =
+          bot.strategy.tpMultiplier.toFixed(1);
+        document.getElementById("bePercent").textContent =
+          bot.strategy.breakEvenPercent.toFixed(1);
+        document.getElementById("tpPercent").textContent =
+          bot.strategy.trailingPercent.toFixed(2);
+
+        bot.utils.log(`Strategy changed to ${strategy}`, "info");
+      });
+
+      // Monitoring toggle
+      const monitoringCheckbox = document.getElementById("monitoringEnabled");
+      monitoringCheckbox.addEventListener("change", () => {
+        bot.monitoring.enabled = monitoringCheckbox.checked;
+
+        if (bot.monitoring.enabled) {
+          bot.trading.startMonitoring();
+        } else {
+          bot.trading.stopMonitoring();
+        }
+      });
+
+      // Clear logs button
+      document.getElementById("btnClearLogs").addEventListener("click", () => {
+        document.getElementById("logContainer").innerHTML = "";
+      });
+
+      // Run market analysis
+      document
+        .getElementById("btnRunAnalysis")
+        .addEventListener("click", async () => {
+          const symbol = document.getElementById("analyzeSymbolInput").value;
+
+          if (!symbol) {
+            bot.utils.showStatus(
+              "Please enter a symbol to analyze",
+              "error",
+              "marketAnalysisResult",
+            );
+            return;
+          }
+
+          await bot.trading.analyzeMarket(symbol);
+        });
+
+      // Connect to Capital.com on button click
+      document
+        .getElementById("btnConnect")
+        .addEventListener("click", async () => {
+          await bot.api.authenticate();
+
+          // Start position monitoring if authenticated successfully
+          if (bot.auth.authenticated) {
+            bot.trading.startMonitoring();
+          }
+        });
+
+      // Refresh positions on button click
+      document
+        .getElementById("btnRefreshPositions")
+        .addEventListener("click", async () => {
+          await bot.api.getPositions();
+        });
+
+      // Analyze market on button click
+      document
+        .getElementById("btnAnalyzeMarket")
+        .addEventListener("click", async () => {
+          const symbol = document.getElementById("symbolInput").value;
+          const direction = document.getElementById("directionSelect").value;
+
+          if (!symbol || !direction) {
+            bot.utils.showStatus(
+              "Please fill in symbol and direction",
+              "error",
+              "analysisResult",
+            );
+            return;
+          }
+
+          // Get market information
+          await bot.api.getMarketInfo(symbol);
+
+          // Store direction
+          bot.marketData.direction = direction;
+
+          // Calculate stop loss and take profit levels based on direction
+          let stopLevel, profitLevel;
+
+          if (direction === "BUY") {
+            stopLevel =
+              bot.marketData.price -
+              bot.marketData.atr * bot.strategy.slMultiplier;
+            profitLevel =
+              bot.marketData.price +
+              bot.marketData.atr * bot.strategy.tpMultiplier;
+          } else {
+            stopLevel =
+              bot.marketData.price +
+              bot.marketData.atr * bot.strategy.slMultiplier;
+            profitLevel =
+              bot.marketData.price -
+              bot.marketData.atr * bot.strategy.tpMultiplier;
+          }
+
+          // Calculate position size based on risk
+          const positionSize = bot.trading.calculatePositionSize(
+            bot.marketData.price,
+            stopLevel,
+            bot.strategy.riskPercent,
+          );
+
+          // Calculate risk amount
+          const riskAmount =
+            bot.account.availableToTrade * (bot.strategy.riskPercent / 100);
+
+          // Update trade preview
+          const tradePreview = document.getElementById("tradePreview");
+          tradePreview.style.display = "block";
+          document.getElementById("previewSymbol").textContent = symbol;
+          document.getElementById("previewDirection").textContent = direction;
+          document.getElementById("previewEntry").textContent =
+            bot.utils.formatNumber(bot.marketData.price);
+
+          const manualSize = document.getElementById("positionSizeInput").value;
+          document.getElementById("previewSize").textContent =
+            manualSize || bot.utils.formatNumber(positionSize);
+
+          document.getElementById("previewSL").textContent =
+            bot.utils.formatNumber(stopLevel);
+          document.getElementById("previewTP").textContent =
+            bot.utils.formatNumber(profitLevel);
+          document.getElementById("previewRiskAmount").textContent =
+            `${bot.utils.formatNumber(riskAmount)} ${bot.account.currency}`;
+
+          bot.utils.showStatus(
+            "Trade analysis complete. Review the details and execute when ready.",
+            "success",
+            "analysisResult",
+          );
+        });
+
+      // Execute trade on button click
+      document
+        .getElementById("btnExecuteTrade")
+        .addEventListener("click", async () => {
+          const symbol = document.getElementById("symbolInput").value;
+          const direction = document.getElementById("directionSelect").value;
+          let size = document.getElementById("positionSizeInput").value;
+          const stopLevel = parseFloat(
+            document.getElementById("previewSL").textContent,
+          );
+          const profitLevel = parseFloat(
+            document.getElementById("previewTP").textContent,
+          );
+
+          // If no manual size was entered, use the calculated size
+          if (!size) {
+            size = document.getElementById("previewSize").textContent;
+          }
+
+          await bot.api.executeTrade(
+            symbol,
+            direction,
+            parseFloat(size),
+            stopLevel,
+            profitLevel,
+          );
+        });
+
+      // Initial log
+      bot.utils.log("Capital.com Trading Bot Interface loaded", "info");
+      bot.utils.log("Please authenticate to start trading", "info");
+    });
+  </script>
+</html>

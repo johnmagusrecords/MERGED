@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Trading Intelligence</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #121212;
+        font-family: "Arial", sans-serif;
+        color: white;
+      }
+
+      #app-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      #fullscreen-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: transform 0.2s ease;
+      }
+
+      #fullscreen-button:hover {
+        transform: scale(1.05);
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        transition: opacity 0.5s ease;
+      }
+
+      .loading-logo {
+        max-width: 200px;
+        margin-bottom: 30px;
+        animation: pulse 2s infinite;
+      }
+
+      .loading-text {
+        font-size: 18px;
+        color: #aaa;
+        margin-bottom: 20px;
+      }
+
+      .loading-dots {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border-radius: 50%;
+        margin: 0 5px;
+        animation: dot-pulse 1.5s infinite ease-in-out;
+      }
+
+      .dot:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+
+      .dot:nth-child(3) {
+        animation-delay: 1s;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 10px rgba(106, 17, 203, 0.5));
+        }
+        50% {
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 20px rgba(37, 117, 252, 0.8));
+        }
+        100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 10px rgba(106, 17, 203, 0.5));
+        }
+      }
+
+      @keyframes dot-pulse {
+        0% {
+          transform: scale(0.6);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.6);
+          opacity: 0.6;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Initial Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-logo">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6a11cb" />
+              <stop offset="100%" stop-color="#2575fc" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+          <text
+            x="100"
+            y="120"
+            font-size="40"
+            text-anchor="middle"
+            fill="url(#gradient)"
+            font-weight="bold"
+          >
+            MPRIME
+          </text>
+          <path d="M100,20 L100,50" stroke="url(#gradient)" stroke-width="5" />
+          <path
+            d="M100,150 L100,180"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+          <path d="M20,100 L50,100" stroke="url(#gradient)" stroke-width="5" />
+          <path
+            d="M150,100 L180,100"
+            stroke="url(#gradient)"
+            stroke-width="5"
+          />
+        </svg>
+      </div>
+      <div class="loading-text">Initializing MAGUS PRIME X</div>
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container">
+      <!-- We'll load the iframe dynamically with JavaScript -->
+    </div>
+
+    <button id="fullscreen-button">Toggle Full Screen (F11)</button>
+
+    <script>
+      // Create and load the app frame
+      function createAppFrame() {
+        const container = document.getElementById("app-container");
+        const frame = document.createElement("iframe");
+        frame.id = "app-frame";
+        frame.onload = function () {
+          console.log("App frame loaded");
+          // Hide loading overlay after a short delay
+          setTimeout(() => {
+            document.getElementById("loading-overlay").style.opacity = "0";
+            setTimeout(() => {
+              document.getElementById("loading-overlay").style.display = "none";
+            }, 500);
+          }, 500);
+        };
+        frame.onerror = function () {
+          console.error("Failed to load app frame");
+          document.querySelector(".loading-text").textContent =
+            "Error loading app. Please refresh.";
+        };
+        frame.src = "magus_prime_x_app.html";
+        container.appendChild(frame);
+      }
+
+      // Handle application flow
+      window.addEventListener("message", function (event) {
+        // Check if the message is from our login page
+        if (event.data && event.data.action === "login") {
+          // Log the event for debugging
+          console.log("Login event received:", event.data);
+
+          // Update loading overlay
+          document.getElementById("loading-overlay").style.display = "flex";
+          document.getElementById("loading-overlay").style.opacity = "1";
+          document.querySelector(".loading-text").textContent =
+            "Connecting to Capital.com...";
+
+          // Wait 1.5 seconds to simulate API connection
+          setTimeout(() => {
+            // Update loading text
+            document.querySelector(".loading-text").textContent =
+              "Loading Trading Dashboard...";
+
+            // Transition to integrated dashboard after another short delay
+            setTimeout(() => {
+              // Load the integrated dashboard
+              const frame = document.getElementById("app-frame");
+              frame.src = "magus_prime_x_integrated.html";
+            }, 500);
+          }, 1500);
+        }
+      });
+
+      // Listen for messages from all frames including child iframes
+      function listenForFrameMessages() {
+        window.addEventListener("message", function (event) {
+          // Pass through messages between frames if needed
+          if (event.data && event.data.type === "navigation") {
+            // Handle navigation between different sections of the app
+            console.log("Navigation message received:", event.data);
+
+            // You can add logic here to change the iframe source or handle other navigation
+          }
+        });
+      }
+
+      // Listen for the F11 key to toggle fullscreen
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F11") {
+          e.preventDefault();
+          toggleFullScreen();
+        }
+      });
+
+      // Toggle fullscreen on button click
+      document
+        .getElementById("fullscreen-button")
+        .addEventListener("click", function () {
+          toggleFullScreen();
+        });
+
+      // Function to toggle fullscreen
+      function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            console.error(
+              `Error attempting to enable full-screen mode: ${err.message}`,
+            );
+          });
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      // Initialize the application
+      window.addEventListener("load", function () {
+        console.log("App initialized");
+
+        // Start listening for messages
+        listenForFrameMessages();
+
+        // Create and load the app frame
+        createAppFrame();
+
+        // Auto fullscreen on page load (browsers require user interaction)
+        setTimeout(() => {
+          document.getElementById("fullscreen-button").click();
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

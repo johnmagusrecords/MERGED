@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGUS PRIME X - Advanced Trading Intelligence</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #111827;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #1a1f2e;
+            border-bottom: 1px solid #2d3748;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-right: 1rem;
+        }
+        
+        .app-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-item {
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #cbd5e1;
+            text-decoration: none;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            color: #ffffff;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .button-primary {
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+        
+        .button-secondary {
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 57px); /* Subtract header height */
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background-color: #1a1f2e;
+            border-right: 1px solid #2d3748;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #cbd5e1;
+        }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: #2d3748;
+            color: #ffffff;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card {
+            background-color: #1a1f2e;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-change {
+            font-size: 0.875rem;
+        }
+        
+        .positive {
+            color: #10b981;
+        }
+        
+        .negative {
+            color: #ef4444;
+        }
+        
+        /* Chart Section */
+        .chart-section {
+            background-color: #1a1f2e;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            background-color: #151a27;
+            border-radius: 0.375rem;
+            overflow: hidden;
+        }
+        
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #1a1f2e;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #2d3748;
+        }
+        
+        tr:hover {
+            background-color: #1e293b;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: #1a1f2e;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d3748;
+        }
+        
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: white;
+        }
+        
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid #2d3748;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: white;
+            border-bottom: 2px solid #6a11cb;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #a0aec0;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            background-color: #111827;
+            border: 1px solid #2d3748;
+            color: white;
+        }
+        
+        .full-width {
+            width: 100%;
+        }
+        
+        /* Button Small */
+        .button-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        /* Nav Bar */
+        .nav-bar {
+            background-color: #1a1f2e;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2d3748;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .action-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+        
+        .action-button.secondary {
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown button {
+            padding-right: 2rem;
+        }
+        
+        .dropdown button i {
+            margin-left: 0.5rem;
+        }
+        
+        .notifications {
+            position: relative;
+        }
+        
+        .badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background-color: #ef4444;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Stats Container */
+        .stats-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: #1a1f2e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-title {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 0.875rem;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background-color: #1a1f2e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        .btn-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeframe-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .timeframe-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        .timeframe-btn.active {
+            background-color: #4CAF50;
+        }
+        
+        /* Indicator Panel */
+        .indicator-panel {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .indicator-box {
+            background-color: #1a1f2e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .indicator-name {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .indicator-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* TradingView Chart */
+        #tradingview-chart {
+            width: 100%;
+            height: 400px;
+            background-color: #151a27;
+            border-radius: 0.375rem;
+            overflow: hidden;
+        }
+        
+        /* Market Analysis Section */
+        .section-container {
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .modern-card {
+            background-color: #1a1f2e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            margin-bottom: 1rem;
+        }
+        
+        .tab-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background-color: #2d3748;
+            color: white;
+        }
+        
+        .tab-btn.active {
+            background-color: #4CAF50;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        /* Learn Section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .resource-card {
+            background-color: #1a1f2e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resource-image {
+            margin-bottom: 1rem;
+        }
+        
+        .resource-image img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        
+        .resource-content {
+            padding: 1rem;
+        }
+        
+        .resource-link {
+            color: #2575fc;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .resource-link:hover {
+            color: #6a11cb;
+        }
+        
+        /* Modern Footer */
+        .main-footer {
+            background-color: #1a1f2e;
+            padding: 2rem 1rem;
+            color: #a0aec0;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-description {
+            margin-bottom: 2rem;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copyright {
+            font-size: 0.875rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .social-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="nav-bar">
+        <div class="logo">
+            <span class="logo-icon">X</span>
+            MAGUS PRIME X
+        </div>
+        <div class="nav-links">
+            <a href="#dashboard" class="nav-link active">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+            <a href="#trades" class="nav-link">
+                <i class="fas fa-exchange-alt"></i> Trades
+            </a>
+            <a href="#markets" class="nav-link">
+                <i class="fas fa-globe"></i> Markets
+            </a>
+            <a href="#assets" class="nav-link">
+                <i class="fas fa-wallet"></i> Portfolio
+            </a>
+            <a href="#news" class="nav-link">
+                <i class="fas fa-newspaper"></i> News
+            </a>
+            <a href="#learn" class="nav-link">
+                <i class="fas fa-graduation-cap"></i> Learn
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="action-button primary">
+                <i class="fas fa-play"></i> Start Bot
+            </button>
+            <div class="dropdown">
+                <button class="action-button secondary">
+                    <i class="fas fa-dollar-sign"></i> USD
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            <button id="connectBtn" class="action-button secondary">
+                <i class="fas fa-plug"></i> Connect
+            </button>
+            <button id="loginBtn" class="action-button secondary">
+                <i class="fas fa-user"></i> Account
+            </button>
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge">1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Account Access</h2>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="register">Register</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content active" id="login-tab">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" required placeholder="Your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" required placeholder="Your password">
+                        </div>
+                        <button type="submit" class="btn-primary full-width">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                </div>
+                <div class="tab-content" id="register-tab">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" required placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" required placeholder="Your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" required placeholder="Create a password">
+                        </div>
+                        <button type="submit" class="btn-primary full-width">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- Portfolio Stats Row -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-title">Portfolio Value</div>
+                <div class="stat-value">$124,578.34</div>
+                <div class="stat-change">
+                    <i class="fas fa-arrow-up"></i>
+                    +2.45% today
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active Trades</div>
+                <div class="stat-value">12</div>
+                <div class="stat-subtitle">8 Scalping • 4 Swing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Win Rate</div>
+                <div class="stat-value">76%</div>
+                <div class="stat-subtitle">Last 100 trades</div>
+            </div>
+        </div>
+
+        <!-- Enhanced Chart Container -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    Market Chart
+                </div>
+                <div class="chart-controls">
+                    <button class="btn-icon"><i class="fas fa-expand"></i></button>
+                    <button class="btn-icon"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+            <div class="timeframe-selector">
+                <button class="timeframe-btn">1m</button>
+                <button class="timeframe-btn">5m</button>
+                <button class="timeframe-btn active">15m</button>
+                <button class="timeframe-btn">1h</button>
+                <button class="timeframe-btn">4h</button>
+                <button class="timeframe-btn">1d</button>
+            </div>
+            
+            <!-- TradingView Chart -->
+            <div id="tradingview-chart" style="height: 400px;"></div>
+            
+            <!-- Technical Indicators Panel -->
+            <div class="indicator-panel">
+                <div class="indicator-box">
+                    <div class="indicator-name">RSI (14)</div>
+                    <div class="indicator-value bullish">60.58</div>
+                </div>
+                <div class="indicator-box">
+                    <div class="indicator-name">MACD (12,26,9)</div>
+                    <div class="indicator-value bullish">30.40</div>
+                </div>
+                <div class="indicator-box">
+                    <div class="indicator-name">AD</div>
+                    <div class="indicator-value neutral">+10.25</div>
+                </div>
+                <div class="indicator-box">
+                    <div class="indicator-name">Bollinger Bands</div>
+                    <div class="indicator-value">Middle Band</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Analyzer Module -->
+        <div class="modern-card card-analyzer">
+            <div class="card-header">
+                <h3>Chart Analyzer Module</h3>
+                <div class="module-tabs">
+                    <button class="tab-btn" data-tab="indicators">Indicators</button>
+                    <button class="tab-btn" data-tab="patterns">Patterns</button>
+                    <button class="tab-btn active" data-tab="analysis">Analysis</button>
+                </div>
+            </div>
+            <div id="analyzer-content" class="card-content">
+                <!-- Content will be dynamically loaded by our Chart Analyzer module -->
+            </div>
+        </div>
+        
+        <!-- Market Cards with 3D Effect -->
+        <div class="market-cards-container">
+            <h3 class="section-heading"><i class="fas fa-globe"></i> Markets</h3>
+            <div class="market-cards">
+                <!-- Market cards will be generated dynamically -->
+            </div>
+        </div>
+
+        <!-- Active Trades Table with modern styling -->
+        <div class="active-trades-container modern-card">
+            <div class="card-header">
+                <h3><i class="fas fa-exchange-alt"></i> Active Trades</h3>
+                <button class="btn-primary">
+                    <i class="fas fa-plus"></i> New Trade
+                </button>
+            </div>
+            <div class="card-content">
+                <table class="trades-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Type</th>
+                            <th>Entry Price</th>
+                            <th>Current Price</th>
+                            <th>P/L</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeTrades">
+                        <!-- Trades will be dynamically loaded -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Market Analysis Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Market Analysis</h2>
+                <div class="section-actions">
+                    <button class="btn-primary analyze-button">
+                        <i class="fas fa-bolt"></i> Analyze Market
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modern-card">
+                <div class="card-header tab-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="analysis"><i class="fas fa-robot"></i> AI Analysis</button>
+                        <button class="tab-btn" data-tab="indicators"><i class="fas fa-chart-bar"></i> Indicators</button>
+                        <button class="tab-btn" data-tab="patterns"><i class="fas fa-shapes"></i> Patterns</button>
+                    </div>
+                </div>
+                <div class="card-body" id="analyzer-content">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Learn Section from Project Bolt -->
+        <div class="section-container" id="learn-section">
+            <div class="section-header">
+                <h2><i class="fas fa-graduation-cap"></i> Learning Resources</h2>
+                <div class="section-actions">
+                    <button class="btn-outline">
+                        <i class="fas fa-book"></i> View All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="resources-grid">
+                <div class="resource-card modern-card">
+                    <div class="resource-image">
+                        <img src="https://images.unsplash.com/photo-1579226905180-636b76d96082?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Trading Basics">
+                    </div>
+                    <div class="resource-content">
+                        <h3>Trading Basics</h3>
+                        <p>Learn the fundamental concepts of trading and market analysis.</p>
+                        <a href="#" class="resource-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="resource-card modern-card">
+                    <div class="resource-image">
+                        <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Technical Analysis">
+                    </div>
+                    <div class="resource-content">
+                        <h3>Technical Analysis</h3>
+                        <p>Master chart patterns and technical indicators for better trading decisions.</p>
+                        <a href="#" class="resource-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="resource-card modern-card">
+                    <div class="resource-image">
+                        <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Risk Management">
+                    </div>
+                    <div class="resource-content">
+                        <h3>Risk Management</h3>
+                        <p>Learn strategies to protect your capital and manage trading risks.</p>
+                        <a href="#" class="resource-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Footer from Project Bolt -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <span class="logo-icon">X</span>
+                    MAGUS PRIME X
+                </div>
+                <p class="footer-description">
+                    Advanced trading intelligence platform with AI-powered market analysis, real-time data, and automated trading strategies.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Trading</h3>
+                <ul class="footer-links">
+                    <li><a href="#markets">Markets</a></li>
+                    <li><a href="#trading">Trading Platform</a></li>
+                    <li><a href="#positions">Positions</a></li>
+                    <li><a href="#bot">Trading Bot</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Learn</h3>
+                <ul class="footer-links">
+                    <li><a href="#tutorials">Tutorials</a></li>
+                    <li><a href="#strategies">Trading Strategies</a></li>
+                    <li><a href="#indicators">Technical Indicators</a></li>
+                    <li><a href="#tools">Trading Tools</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="copyright">
+                &copy; 2025 MAGUS PRIME X. All rights reserved.
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add TradingView Widget Integration -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+        // Initialize TradingView widget
+        document.addEventListener('DOMContentLoaded', function() {
+            new TradingView.widget({
+                "width": "100%",
+                "height": 400,
+                "symbol": "BTCUSD",
+                "interval": "15",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#0a0a0a",
+                "enable_publishing": false,
+                "hide_top_toolbar": true,
+                "allow_symbol_change": true,
+                "studies": [
+                    "RSI@tv-basicstudies",
+                    "MAExp@tv-basicstudies",
+                    "MACD@tv-basicstudies"
+                ],
+                "container_id": "tradingview-chart"
+            });
+        });
+    </script>
+</body>
+</html>

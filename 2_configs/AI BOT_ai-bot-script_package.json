@@ -1,0 +1,20 @@
+{
+  "name": "ai-bot-script",
+  "version": "1.0.0",
+  "description": "A simple AI bot application.",
+  "main": "src/bot.ts",
+  "scripts": {
+    "start": "ts-node src/bot.ts",
+    "build": "tsc",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "typescript": "^4.5.0",
+    "ts-node": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

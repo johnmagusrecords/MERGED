@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGUS PRIME X - Advanced Trading Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold text-gray-800">MAGUS PRIME X</h1>
+                <div class="flex space-x-4">
+                    <button id="pauseBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                        Pause Bot
+                    </button>
+                    <button id="emergencyStopBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                        Emergency Stop
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Strategy Controls -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2">Strategy Mode</h3>
+                    <select id="strategyMode" class="w-full p-2 border rounded">
+                        <option value="Safe">Safe</option>
+                        <option value="Balanced">Balanced</option>
+                        <option value="Aggressive">Aggressive</option>
+                    </select>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2">Trading Mode</h3>
+                    <select id="tradingMode" class="w-full p-2 border rounded">
+                        <option value="Live">Live Trading</option>
+                        <option value="Paper">Paper Trading</option>
+                        <option value="Backtest">Backtest</option>
+                    </select>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2">Risk Level</h3>
+                    <input type="range" id="riskLevel" min="1" max="5" value="2" class="w-full">
+                    <div class="text-sm text-gray-600 mt-1">Current: <span id="riskValue">2</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Performance Metrics -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Performance Metrics</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-3 rounded">
+                        <div class="text-sm text-gray-600">Win Rate</div>
+                        <div class="text-2xl font-bold" id="winRate">0%</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <div class="text-sm text-gray-600">Net Profit</div>
+                        <div class="text-2xl font-bold" id="netProfit">$0</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <div class="text-sm text-gray-600">Sharpe Ratio</div>
+                        <div class="text-2xl font-bold" id="sharpeRatio">0.00</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <div class="text-sm text-gray-600">Max Drawdown</div>
+                        <div class="text-2xl font-bold" id="maxDrawdown">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Performance Charts</h2>
+                    <select id="chartType" class="p-2 border rounded">
+                        <option value="equity">Equity Curve</option>
+                        <option value="trades">Trade History</option>
+                        <option value="drawdown">Drawdown</option>
+                    </select>
+                </div>
+                <div id="mainChart" style="height: 400px;"></div>
+            </div>
+
+            <!-- Active Trades -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Active Trades</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-2">Symbol</th>
+                                <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2">Entry</th>
+                                <th class="px-4 py-2">P/L</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeTrades">
+                            <!-- Active trades will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Strategy Performance -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Strategy Performance</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded">
+                        <h4 class="font-semibold mb-2">RSI Strategy</h4>
+                        <div class="text-sm">Win Rate: <span id="rsiWinRate">0%</span></div>
+                        <div class="text-sm">Profit: <span id="rsiProfit">$0</span></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded">
+                        <h4 class="font-semibold mb-2">MACD Strategy</h4>
+                        <div class="text-sm">Win Rate: <span id="macdWinRate">0%</span></div>
+                        <div class="text-sm">Profit: <span id="macdProfit">$0</span></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded">
+                        <h4 class="font-semibold mb-2">AI Strategy</h4>
+                        <div class="text-sm">Win Rate: <span id="aiWinRate">0%</span></div>
+                        <div class="text-sm">Profit: <span id="aiProfit">$0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News & Sentiment -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Market Sentiment</h2>
+                <div id="sentimentChart" style="height: 200px;"></div>
+                <div class="mt-4">
+                    <h3 class="font-semibold mb-2">Latest News</h3>
+                    <div id="newsContainer" class="space-y-2">
+                        <!-- News items will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        function initCharts() {
+            const equityData = {
+                x: [],
+                y: [],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Equity'
+            };
+
+            const layout = {
+                margin: { t: 20, r: 20, b: 40, l: 40 },
+                showlegend: false,
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Value ($)' }
+            };
+
+            Plotly.newPlot('mainChart', [equityData], layout);
+
+            // Initialize sentiment gauge
+            const sentimentData = [{
+                type: "indicator",
+                mode: "gauge+number",
+                value: 50,
+                gauge: {
+                    axis: { range: [0, 100] },
+                    bar: { color: "#1f77b4" },
+                    steps: [
+                        { range: [0, 30], color: "#ff7f0e" },
+                        { range: [30, 70], color: "#2ca02c" },
+                        { range: [70, 100], color: "#ff7f0e" }
+                    ]
+                }
+            }];
+
+            const sentimentLayout = {
+                margin: { t: 20, r: 20, b: 20, l: 20 },
+                height: 200
+            };
+
+            Plotly.newPlot('sentimentChart', sentimentData, sentimentLayout);
+        }
+
+        // Update performance metrics
+        function updateMetrics(data) {
+            document.getElementById('winRate').textContent = data.winRate + '%';
+            document.getElementById('netProfit').textContent = '$' + data.netProfit;
+            document.getElementById('sharpeRatio').textContent = data.sharpeRatio.toFixed(2);
+            document.getElementById('maxDrawdown').textContent = data.maxDrawdown + '%';
+        }
+
+        // Update active trades
+        function updateActiveTrades(trades) {
+            const tbody = document.getElementById('activeTrades');
+            tbody.innerHTML = '';
+            trades.forEach(trade => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-4 py-2">${trade.symbol}</td>
+                    <td class="px-4 py-2">${trade.type}</td>
+                    <td class="px-4 py-2">${trade.entry}</td>
+                    <td class="px-4 py-2 ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}">${trade.pnl}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update strategy performance
+        function updateStrategyPerformance(data) {
+            document.getElementById('rsiWinRate').textContent = data.rsi.winRate + '%';
+            document.getElementById('rsiProfit').textContent = '$' + data.rsi.profit;
+            document.getElementById('macdWinRate').textContent = data.macd.winRate + '%';
+            document.getElementById('macdProfit').textContent = '$' + data.macd.profit;
+            document.getElementById('aiWinRate').textContent = data.ai.winRate + '%';
+            document.getElementById('aiProfit').textContent = '$' + data.ai.profit;
+        }
+
+        // Update news feed
+        function updateNews(news) {
+            const container = document.getElementById('newsContainer');
+            container.innerHTML = '';
+            news.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'text-sm';
+                div.innerHTML = `
+                    <span class="font-semibold">${item.time}</span>
+                    <span class="ml-2">${item.headline}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Event listeners
+        document.getElementById('strategyMode').addEventListener('change', function(e) {
+            fetch('/update_strategy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: e.target.value })
+            });
+        });
+
+        document.getElementById('riskLevel').addEventListener('input', function(e) {
+            document.getElementById('riskValue').textContent = e.target.value;
+            fetch('/update_risk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ level: e.target.value })
+            });
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', function() {
+            const isPaused = this.textContent.includes('Resume');
+            this.textContent = isPaused ? 'Pause Bot' : 'Resume Bot';
+            this.className = isPaused 
+                ? 'bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded'
+                : 'bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded';
+            fetch('/toggle_bot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: isPaused ? 'resume' : 'pause' })
+            });
+        });
+
+        document.getElementById('emergencyStopBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to emergency stop the bot?')) {
+                fetch('/emergency_stop', { method: 'POST' });
+            }
+        });
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            // Start WebSocket connection for real-time updates
+            const ws = new WebSocket('ws://' + window.location.host + '/ws');
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.type === 'metrics') updateMetrics(data.data);
+                else if (data.type === 'trades') updateActiveTrades(data.data);
+                else if (data.type === 'strategy') updateStrategyPerformance(data.data);
+                else if (data.type === 'news') updateNews(data.data);
+                else if (data.type === 'chart') {
+                    Plotly.update('mainChart', {
+                        x: [data.data.time],
+                        y: [data.data.value]
+                    });
+                }
+            };
+        });
+    </script>
+</body>
+</html>

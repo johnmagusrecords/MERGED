@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Navigation Test</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #111827;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Navigation Bar Styles */
+      .nav-bar {
+        background-color: #1a1f2e;
+        border-bottom: 1px solid #2d3748;
+        padding: 0.75rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
+
+      .logo-icon {
+        margin-right: 0.5rem;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .nav-link {
+        cursor: pointer;
+        transition: color 0.2s;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: #ffffff;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .action-button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        background-color: #2d3748;
+        color: white;
+      }
+
+      .action-button.primary {
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+      }
+
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .currency-dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 4px;
+        overflow: hidden;
+        z-index: 1000;
+        display: none;
+        width: 100px;
+      }
+
+      .dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .dropdown-item:hover {
+        background-color: #2d3748;
+      }
+
+      .notifications {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #ef4444;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+      }
+
+      /* Content Area */
+      .container {
+        padding: 2rem;
+      }
+
+      .page-section {
+        display: none;
+        padding: 1rem;
+        background-color: #1a1f2e;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .page-section.active {
+        display: block;
+      }
+
+      h2 {
+        margin-bottom: 1rem;
+        color: #4cc9f0;
+      }
+
+      /* Notification */
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #1a1f2e;
+        border-left: 4px solid #3498db;
+        color: white;
+        padding: 15px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        min-width: 300px;
+        animation: slide-in 0.5s forwards;
+      }
+
+      .notification.success {
+        border-left-color: #2ecc71;
+      }
+
+      .notification.error {
+        border-left-color: #e74c3c;
+      }
+
+      .notification-content {
+        display: flex;
+        align-items: center;
+      }
+
+      .notification i {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .close-notification {
+        background: none;
+        border: none;
+        color: #aaa;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .close-notification:hover {
+        color: white;
+      }
+
+      .notification.fade-out {
+        opacity: 0;
+        transform: translateX(30px);
+        transition: all 0.5s;
+      }
+
+      @keyframes slide-in {
+        0% {
+          transform: translateX(100px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Testing Panel */
+      .test-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #1a1f2e;
+        border-top: 1px solid #2d3748;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .test-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .test-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .test-log {
+        background-color: #151a27;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        max-height: 100px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      .log-entry {
+        margin-bottom: 0.25rem;
+      }
+
+      .log-entry.success {
+        color: #4ade80;
+      }
+
+      .log-entry.error {
+        color: #f87171;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="nav-bar">
+      <div class="logo">
+        <span class="logo-icon">X</span>
+        MAGUS PRIME X
+      </div>
+      <div class="nav-links">
+        <a href="#dashboard" class="nav-link active">
+          <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+        <a href="#trades" class="nav-link">
+          <i class="fas fa-exchange-alt"></i> Trades
+        </a>
+        <a href="#markets" class="nav-link">
+          <i class="fas fa-globe"></i> Markets
+        </a>
+        <a href="#portfolio" class="nav-link">
+          <i class="fas fa-wallet"></i> Portfolio
+        </a>
+        <a href="#news" class="nav-link">
+          <i class="fas fa-newspaper"></i> News
+        </a>
+        <a href="#learn" class="nav-link">
+          <i class="fas fa-graduation-cap"></i> Learn
+        </a>
+      </div>
+      <div class="nav-actions">
+        <button class="action-button primary">
+          <i class="fas fa-play"></i> Start Bot
+        </button>
+        <div class="dropdown">
+          <button class="action-button secondary">
+            <i class="fas fa-dollar-sign"></i> USD
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+        <button id="connectBtn" class="action-button secondary">
+          <i class="fas fa-plug"></i> Connect
+        </button>
+        <button id="accountBtn" class="action-button secondary">
+          <i class="fas fa-user"></i> Account
+        </button>
+        <div class="notifications">
+          <i class="fas fa-bell"></i>
+          <span class="badge">1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="page-section active">
+        <h2>Dashboard</h2>
+        <p>
+          Welcome to the MAGUS PRIME X Dashboard. This is the main control panel
+          for your trading activities.
+        </p>
+      </div>
+
+      <!-- Trades Section -->
+      <div id="trades" class="page-section">
+        <h2>Trades</h2>
+        <p>View and manage your active trades.</p>
+      </div>
+
+      <!-- Markets Section -->
+      <div id="markets" class="page-section">
+        <h2>Markets</h2>
+        <p>Explore different markets and trading opportunities.</p>
+      </div>
+
+      <!-- Portfolio Section -->
+      <div id="portfolio" class="page-section">
+        <h2>Portfolio</h2>
+        <p>Track your investment portfolio and performance metrics.</p>
+      </div>
+
+      <!-- News Section -->
+      <div id="news" class="page-section">
+        <h2>News</h2>
+        <p>Stay updated with the latest market news and announcements.</p>
+      </div>
+
+      <!-- Learn Section -->
+      <div id="learn" class="page-section">
+        <h2>Learn</h2>
+        <p>
+          Educational resources and trading guides for beginners and advanced
+          traders.
+        </p>
+      </div>
+    </div>
+
+    <!-- Testing Panel -->
+    <div class="test-panel">
+      <div class="test-title">Navigation Bar Testing Panel</div>
+      <div class="test-actions">
+        <button class="action-button" id="testNavLinks">
+          Test Navigation Links
+        </button>
+        <button class="action-button" id="testStartBot">
+          Test Start Bot Button
+        </button>
+        <button class="action-button" id="testConnect">
+          Test Connect Button
+        </button>
+        <button class="action-button" id="testCurrency">
+          Test Currency Dropdown
+        </button>
+      </div>
+      <div class="test-log" id="testLog">
+        <div class="log-entry">Ready to test navigation bar buttons...</div>
+      </div>
+    </div>
+
+    <script>
+      // Helper function to add log entries
+      function addLogEntry(message, type = "info") {
+        const logContainer = document.getElementById("testLog");
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        entry.textContent = message;
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      }
+
+      // Helper function to show notifications
+      function showNotification(message, type = "info") {
+        // Create notification
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${
+                      type === "success"
+                        ? "fa-check-circle"
+                        : type === "error"
+                          ? "fa-exclamation-circle"
+                          : "fa-info-circle"
+                    }"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="close-notification">×</button>
+            `;
+
+        // Add notification to the page
+        document.body.appendChild(notification);
+
+        // Add event listener to close button
+        notification
+          .querySelector(".close-notification")
+          .addEventListener("click", function () {
+            notification.remove();
+          });
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          notification.classList.add("fade-out");
+          setTimeout(() => {
+            notification.remove();
+          }, 500);
+        }, 5000);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Fix for navigation links
+        const navLinks = document.querySelectorAll(".nav-links .nav-link");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Get the target section from href
+            const targetId = this.getAttribute("href").replace("#", "");
+            addLogEntry(`Navigation clicked: ${targetId}`, "success");
+
+            // Remove active class from all nav links
+            navLinks.forEach((navLink) => {
+              navLink.classList.remove("active");
+            });
+
+            // Add active class to clicked link
+            this.classList.add("active");
+
+            // Hide all page sections
+            const pageSections = document.querySelectorAll(".page-section");
+            pageSections.forEach((section) => {
+              section.classList.remove("active");
+            });
+
+            // Show the target section
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+              targetSection.classList.add("active");
+              showNotification(`Navigated to ${targetId}`, "success");
+            }
+          });
+        });
+
+        // Fix for Start Bot button
+        const startBotBtn = document.querySelector(".action-button.primary");
+        if (startBotBtn) {
+          startBotBtn.addEventListener("click", function () {
+            const isStarting = this.innerHTML.includes("Start");
+
+            if (isStarting) {
+              this.innerHTML = '<i class="fas fa-stop"></i> Stop Bot';
+              addLogEntry("Started the trading bot", "success");
+              showNotification("Trading bot started successfully!", "success");
+            } else {
+              this.innerHTML = '<i class="fas fa-play"></i> Start Bot';
+              addLogEntry("Stopped the trading bot", "success");
+              showNotification("Trading bot stopped", "info");
+            }
+          });
+        }
+
+        // Fix for Connect button
+        const connectBtn = document.getElementById("connectBtn");
+        if (connectBtn) {
+          connectBtn.addEventListener("click", function () {
+            const isConnecting = this.innerHTML.includes("Connect");
+
+            if (isConnecting) {
+              this.innerHTML = '<i class="fas fa-check"></i> Connected';
+              addLogEntry("Connected to Capital.com", "success");
+              showNotification(
+                "Connected to Capital.com successfully!",
+                "success",
+              );
+            } else {
+              this.innerHTML = '<i class="fas fa-plug"></i> Connect';
+              addLogEntry("Disconnected from trading API", "success");
+              showNotification("Disconnected from trading API", "info");
+            }
+          });
+        }
+
+        // Fix for Currency dropdown
+        const currencyDropdown = document.querySelector(
+          ".dropdown .action-button.secondary",
+        );
+        if (currencyDropdown) {
+          currencyDropdown.addEventListener("click", function () {
+            addLogEntry("Currency dropdown clicked", "success");
+
+            // Create dropdown menu if it doesn't exist
+            let dropdownMenu = document.querySelector(
+              ".currency-dropdown-menu",
+            );
+
+            if (!dropdownMenu) {
+              dropdownMenu = document.createElement("div");
+              dropdownMenu.className = "currency-dropdown-menu";
+              dropdownMenu.innerHTML = `
+                            <div class="dropdown-item">USD</div>
+                            <div class="dropdown-item">EUR</div>
+                            <div class="dropdown-item">GBP</div>
+                            <div class="dropdown-item">JPY</div>
+                        `;
+
+              // Insert dropdown menu after the button
+              this.parentNode.appendChild(dropdownMenu);
+
+              // Add click events to dropdown items
+              dropdownMenu
+                .querySelectorAll(".dropdown-item")
+                .forEach((item) => {
+                  item.addEventListener("click", function () {
+                    currencyDropdown.innerHTML = `
+                                    <i class="fas fa-dollar-sign"></i> ${this.textContent}
+                                    <i class="fas fa-chevron-down"></i>
+                                `;
+                    addLogEntry(
+                      `Currency changed to ${this.textContent}`,
+                      "success",
+                    );
+                    showNotification(
+                      `Currency changed to ${this.textContent}`,
+                      "success",
+                    );
+                    dropdownMenu.style.display = "none";
+                  });
+                });
+            } else {
+              // Toggle dropdown visibility
+              dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+            }
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener("click", function (e) {
+            if (!e.target.closest(".dropdown")) {
+              const dropdownMenu = document.querySelector(
+                ".currency-dropdown-menu",
+              );
+              if (dropdownMenu) {
+                dropdownMenu.style.display = "none";
+              }
+            }
+          });
+        }
+
+        // Test buttons in the testing panel
+        document
+          .getElementById("testNavLinks")
+          .addEventListener("click", function () {
+            addLogEntry("Testing navigation links...", "info");
+            const links = [
+              "dashboard",
+              "trades",
+              "markets",
+              "portfolio",
+              "news",
+              "learn",
+            ];
+
+            let index = 0;
+            const testInterval = setInterval(() => {
+              if (index >= links.length) {
+                clearInterval(testInterval);
+                addLogEntry("Navigation links test complete", "success");
+                return;
+              }
+
+              const currentLink = document.querySelector(
+                `.nav-link[href="#${links[index]}"]`,
+              );
+              if (currentLink) {
+                currentLink.click();
+              }
+
+              index++;
+            }, 1000);
+          });
+
+        document
+          .getElementById("testStartBot")
+          .addEventListener("click", function () {
+            addLogEntry("Testing Start Bot button...", "info");
+            const botButton = document.querySelector(".action-button.primary");
+            botButton.click();
+
+            // Test toggle after 2 seconds
+            setTimeout(() => {
+              botButton.click();
+              addLogEntry("Start Bot button test complete", "success");
+            }, 2000);
+          });
+
+        document
+          .getElementById("testConnect")
+          .addEventListener("click", function () {
+            addLogEntry("Testing Connect button...", "info");
+            const connectButton = document.getElementById("connectBtn");
+            connectButton.click();
+
+            // Test toggle after 2 seconds
+            setTimeout(() => {
+              connectButton.click();
+              addLogEntry("Connect button test complete", "success");
+            }, 2000);
+          });
+
+        document
+          .getElementById("testCurrency")
+          .addEventListener("click", function () {
+            addLogEntry("Testing Currency dropdown...", "info");
+            const currencyButton = document.querySelector(
+              ".dropdown .action-button.secondary",
+            );
+            currencyButton.click();
+
+            // Select a currency after 1 second
+            setTimeout(() => {
+              const currency = document.querySelector(
+                ".dropdown-item:nth-child(2)",
+              );
+              if (currency) {
+                currency.click();
+                addLogEntry("Currency dropdown test complete", "success");
+              }
+            }, 1000);
+          });
+
+        addLogEntry("All button handlers successfully initialized", "success");
+        showNotification(
+          "Navigation buttons test page loaded successfully",
+          "success",
+        );
+      });
+    </script>
+  </body>
+</html>

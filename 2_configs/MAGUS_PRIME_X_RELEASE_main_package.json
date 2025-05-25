@@ -1,0 +1,62 @@
+{
+  "name": "magus-prime-x",
+  "version": "1.0.0",
+  "description": "Magus Prime X - AI Powered Trading Bot",
+  "main": "electron.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"python trading_bot.py\" \"electron .\"",
+    "build": "electron-builder",
+    "test": "jest"
+  },
+  "author": "Jean Ghanem",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "node-fetch": "^3.3.2",
+    "socket.io-client": "^4.7.4",
+    "tradingview-api": "^1.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.2.0",
+    "electron-builder": "^24.13.3",
+    "jest": "^29.7.0"
+  },
+  "build": {
+    "appId": "com.magusprimex.trading",
+    "productName": "Magus Prime X",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/*.pyc"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

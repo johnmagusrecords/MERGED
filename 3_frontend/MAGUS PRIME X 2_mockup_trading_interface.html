@@ -1,0 +1,1623 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Trading Interface</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        font-family: "Arial", sans-serif;
+        color: white;
+        overflow: hidden;
+      }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #1e1e1e;
+        border-bottom: 1px solid #333;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+      }
+      .logo svg {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+      }
+      .logo-text {
+        font-size: 18px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+      }
+      .user-balance {
+        margin-right: 20px;
+        background: rgba(40, 40, 40, 0.7);
+        padding: 5px 10px;
+        border-radius: 4px;
+      }
+      .user-name {
+        background: rgba(40, 40, 40, 0.7);
+        padding: 5px 10px;
+        border-radius: 4px;
+      }
+      .main-container {
+        display: grid;
+        grid-template-columns: 250px 1fr 300px;
+        height: calc(100vh - 60px);
+      }
+      .sidebar {
+        background-color: #1e1e1e;
+        padding: 20px;
+        overflow-y: auto;
+        border-right: 1px solid #333;
+      }
+      .sidebar-section {
+        margin-bottom: 25px;
+      }
+      .sidebar-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #999;
+      }
+      .markets-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .market-item {
+        padding: 8px 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .market-item:hover {
+        background-color: #2a2a2a;
+      }
+      .market-item.active {
+        background-color: rgba(106, 17, 203, 0.3);
+      }
+      .content {
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .chart-container {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background-color: #252525;
+      }
+      .chart-title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .timeframe-selector {
+        display: flex;
+      }
+      .timeframe-btn {
+        padding: 5px 10px;
+        margin-left: 5px;
+        background-color: #333;
+        border: none;
+        border-radius: 4px;
+        color: #ccc;
+        cursor: pointer;
+      }
+      .timeframe-btn.active {
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+      }
+      .chart-content {
+        height: 400px;
+        position: relative;
+      }
+      .chart-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .analysis-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .analysis-card {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 15px;
+      }
+      .card-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #999;
+        display: flex;
+        align-items: center;
+      }
+      .card-title svg {
+        margin-right: 5px;
+      }
+      .pattern-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .pattern-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #333;
+      }
+      .pattern-item:last-child {
+        border-bottom: none;
+      }
+      .pattern-name {
+        font-weight: bold;
+      }
+      .pattern-confidence {
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+      .bullish {
+        background-color: rgba(46, 204, 113, 0.3);
+        color: #2ecc71;
+      }
+      .bearish {
+        background-color: rgba(231, 76, 60, 0.3);
+        color: #e74c3c;
+      }
+      .neutral {
+        background-color: rgba(149, 165, 166, 0.3);
+        color: #95a5a6;
+      }
+      .support-resistance-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .sr-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #333;
+      }
+      .sr-item:last-child {
+        border-bottom: none;
+      }
+      .support {
+        color: #2ecc71;
+      }
+      .resistance {
+        color: #e74c3c;
+      }
+      .right-panel {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-left: 1px solid #333;
+      }
+      .panel-section {
+        margin-bottom: 25px;
+      }
+      .panel-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #999;
+      }
+      .panel-content {
+        background-color: #252525;
+        border-radius: 8px;
+        padding: 15px;
+      }
+      .signal-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .signal-label {
+        font-size: 14px;
+        color: #ccc;
+      }
+      .signal-value {
+        font-weight: bold;
+        font-size: 16px;
+      }
+      .trade-form {
+        margin-top: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #ccc;
+      }
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        background-color: #333;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 14px;
+      }
+      .trade-btn {
+        width: 48%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      .buy-btn {
+        background-color: #27ae60;
+        color: white;
+      }
+      .sell-btn {
+        background-color: #c0392b;
+        color: white;
+      }
+      .trade-buttons {
+        display: flex;
+        justify-content: space-between;
+      }
+      .chart-annotations {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        background-color: rgba(20, 20, 20, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #333;
+      }
+      .annotation-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .annotation-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+      .status-bar {
+        padding: 10px 20px;
+        background-color: #252525;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #999;
+      }
+      .indicator-summary {
+        background-color: #252525;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .indicator-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .indicator-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        background-color: #333;
+        border-radius: 5px;
+      }
+      .indicator-name {
+        font-size: 12px;
+        color: #ccc;
+      }
+      .indicator-value {
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .disclaimer {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        padding: 10px;
+      }
+
+      /* Bot Control Styles */
+      .bot-control-panel {
+        background: linear-gradient(180deg, #1e1e2e 0%, #252535 100%);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #6a11cb40;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .bot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .bot-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        display: flex;
+        align-items: center;
+      }
+
+      .bot-title svg {
+        margin-right: 8px;
+        fill: none;
+        stroke: #6a11cb;
+      }
+
+      .bot-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .bot-active {
+        background-color: rgba(46, 204, 113, 0.3);
+        color: #2ecc71;
+      }
+
+      .bot-inactive {
+        background-color: rgba(231, 76, 60, 0.3);
+        color: #e74c3c;
+      }
+
+      .bot-metrics {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+
+      .bot-metric {
+        text-align: center;
+        flex: 1;
+        padding: 10px;
+        background-color: rgba(30, 30, 46, 0.5);
+        border-radius: 8px;
+        margin: 0 5px;
+      }
+
+      .metric-value {
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      .metric-label {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+      }
+
+      .bot-controls {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .control-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s;
+      }
+
+      .control-btn svg {
+        margin-right: 8px;
+      }
+
+      .start-btn {
+        background: linear-gradient(45deg, #2ecc71, #1abc9c);
+        color: white;
+      }
+
+      .start-btn:hover {
+        background: linear-gradient(45deg, #27ae60, #16a085);
+      }
+
+      .stop-btn {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+      }
+
+      .stop-btn:hover {
+        background: linear-gradient(45deg, #c0392b, #a93226);
+      }
+
+      .pause-btn {
+        background: linear-gradient(45deg, #f39c12, #d35400);
+        color: white;
+      }
+
+      .pause-btn:hover {
+        background: linear-gradient(45deg, #d35400, #a04000);
+      }
+
+      /* Asset Dashboard Styles */
+      .assets-dashboard {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .asset-card {
+        background-color: rgba(30, 30, 46, 0.5);
+        border-radius: 8px;
+        padding: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .asset-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+      }
+
+      .asset-card.crypto::before {
+        background: linear-gradient(0deg, #f1c40f, #f39c12);
+      }
+
+      .asset-card.forex::before {
+        background: linear-gradient(0deg, #3498db, #2980b9);
+      }
+
+      .asset-card.stock::before {
+        background: linear-gradient(0deg, #2ecc71, #27ae60);
+      }
+
+      .asset-card.index::before {
+        background: linear-gradient(0deg, #9b59b6, #8e44ad);
+      }
+
+      .asset-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 12px;
+        margin-right: 8px;
+      }
+
+      .asset-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .asset-name {
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .asset-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+      }
+
+      .asset-position {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #999;
+      }
+
+      /* Trade List Styles */
+      .trade-list {
+        margin-top: 15px;
+      }
+
+      .trade-item {
+        padding: 10px;
+        border-radius: 8px;
+        background-color: rgba(30, 30, 46, 0.5);
+        margin-bottom: 10px;
+        border-left: 4px solid;
+      }
+
+      .trade-item.buy {
+        border-color: #2ecc71;
+      }
+
+      .trade-item.sell {
+        border-color: #e74c3c;
+      }
+
+      .trade-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+
+      .trade-symbol {
+        font-weight: bold;
+      }
+
+      .trade-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #ccc;
+      }
+
+      .trade-pl {
+        font-weight: bold;
+      }
+
+      .trade-pl.positive {
+        color: #2ecc71;
+      }
+
+      .trade-pl.negative {
+        color: #e74c3c;
+      }
+
+      /* Bot Strategy Selector */
+      .strategy-selector {
+        display: flex;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        overflow-x: auto;
+        padding: 5px 0;
+      }
+
+      .strategy-option {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background-color: #333;
+        color: #ccc;
+        font-size: 13px;
+        margin-right: 10px;
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .strategy-option:hover {
+        background-color: #444;
+      }
+
+      .strategy-option.active {
+        background-color: rgba(106, 17, 203, 0.2);
+        color: white;
+        border-color: #6a11cb;
+      }
+
+      /* Responsive Full Screen Adjustments */
+      @media (min-width: 1400px) {
+        .main-container {
+          grid-template-columns: 300px 1fr 350px;
+        }
+
+        .chart-content {
+          height: 500px;
+        }
+
+        .assets-dashboard {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1800px) {
+        .main-container {
+          grid-template-columns: 350px 1fr 400px;
+        }
+
+        .chart-content {
+          height: 600px;
+        }
+
+        .assets-dashboard {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="logo">
+        <svg viewBox="0 0 40 40">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6a11cb" />
+              <stop offset="100%" stop-color="#2575fc" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            fill="none"
+            stroke="url(#gradient)"
+            stroke-width="2"
+          />
+          <text
+            x="20"
+            y="24"
+            font-size="8"
+            text-anchor="middle"
+            fill="url(#gradient)"
+            font-weight="bold"
+          >
+            MPX
+          </text>
+        </svg>
+        <span class="logo-text">MAGUS PRIME X</span>
+      </div>
+      <div class="user-info">
+        <div class="user-balance">Balance: $25,430.75</div>
+        <div class="user-name">John Trader</div>
+      </div>
+    </div>
+    <div class="main-container">
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">MARKETS</h3>
+          <ul class="markets-list">
+            <li class="market-item active">BTC/USD</li>
+            <li class="market-item">ETH/USD</li>
+            <li class="market-item">XRP/USD</li>
+            <li class="market-item">LTC/USD</li>
+            <li class="market-item">DOT/USD</li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">WATCHLIST</h3>
+          <ul class="markets-list">
+            <li class="market-item">ADA/USD</li>
+            <li class="market-item">SOL/USD</li>
+            <li class="market-item">DOGE/USD</li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">ANALYSIS MODULES</h3>
+          <ul class="markets-list">
+            <li class="market-item">Chart Analyzer</li>
+            <li class="market-item">ChatGPT Analyst</li>
+            <li class="market-item">DeepSeeker Analysis</li>
+            <li class="market-item">AI Learning System</li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">BOT STRATEGIES</h3>
+          <ul class="markets-list">
+            <li class="market-item active" data-strategy="momentum">
+              Momentum Trader
+            </li>
+            <li class="market-item" data-strategy="trend">Trend Follower</li>
+            <li class="market-item" data-strategy="scalping">Scalping Bot</li>
+            <li class="market-item" data-strategy="breakout">
+              Breakout Hunter
+            </li>
+            <li class="market-item" data-strategy="reversal">
+              Reversal Predictor
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content">
+        <div class="chart-container">
+          <div class="chart-header">
+            <div class="chart-title">BTC/USD</div>
+            <div class="timeframe-selector">
+              <button class="timeframe-btn">1m</button>
+              <button class="timeframe-btn">5m</button>
+              <button class="timeframe-btn">15m</button>
+              <button class="timeframe-btn">1h</button>
+              <button class="timeframe-btn active">1d</button>
+            </div>
+          </div>
+          <div class="chart-content">
+            <img
+              src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22400%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23232323%22%2F%3E%3Cpath%20d%3D%22M50%2C350%20L100%2C320%20L150%2C330%20L200%2C280%20L250%2C250%20L300%2C210%20L350%2C230%20L400%2C200%20L450%2C170%20L500%2C150%20L550%2C130%20L600%2C110%20L650%2C90%20L700%2C80%20L750%2C50%22%20stroke%3D%22url(%23grad1)%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22grad1%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%220%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%234facfe%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2300f2fe%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cline%20x1%3D%2250%22%20y1%3D%22200%22%20x2%3D%22750%22%20y2%3D%22200%22%20stroke%3D%22%23444%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%225%2C5%22%2F%3E%3Cline%20x1%3D%22350%22%20y1%3D%22270%22%20x2%3D%22750%22%20y2%3D%22270%22%20stroke%3D%22%2327ae60%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%225%2C5%22%2F%3E%3Cline%20x1%3D%22350%22%20y1%3D%22150%22%20x2%3D%22750%22%20y2%3D%22150%22%20stroke%3D%22%23e74c3c%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%225%2C5%22%2F%3E%3Crect%20x%3D%22550%22%20y%3D%22110%22%20width%3D%2250%22%20height%3D%2240%22%20stroke%3D%22%2327ae60%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20stroke-dasharray%3D%222%2C2%22%2F%3E%3Ctext%20x%3D%22610%22%20y%3D%22130%22%20font-family%3D%22Arial%22%20font-size%3D%2210%22%20fill%3D%22%2327ae60%22%3EBullish%20Pattern%3C%2Ftext%3E%3Ctext%20x%3D%2250%22%20y%3D%2230%22%20font-family%3D%22Arial%22%20font-size%3D%2212%22%20fill%3D%22%23ccc%22%3EBTC%2FUSD%20-%20Daily%20Chart%20with%20Chart%20Analyzer%20Pattern%20Detection%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22320%22%20x2%3D%22150%22%20y2%3D%22330%22%20stroke%3D%22%234facfe%22%20stroke-width%3D%224%22%2F%3E%3Cline%20x1%3D%22500%22%20y1%3D%22150%22%20x2%3D%22550%22%20y2%3D%22130%22%20stroke%3D%22%234facfe%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E"
+              class="chart-img"
+              alt="BTC/USD Chart"
+            />
+            <div class="chart-annotations">
+              <div class="annotation-item">
+                <div
+                  class="annotation-color"
+                  style="background-color: #27ae60"
+                ></div>
+                <span>Support Level</span>
+              </div>
+              <div class="annotation-item">
+                <div
+                  class="annotation-color"
+                  style="background-color: #e74c3c"
+                ></div>
+                <span>Resistance Level</span>
+              </div>
+              <div class="annotation-item">
+                <div
+                  class="annotation-color"
+                  style="background-color: #4facfe"
+                ></div>
+                <span>Bullish Pattern</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="indicator-summary">
+          <h3 class="card-title">Technical Indicators Summary</h3>
+          <div class="indicator-grid">
+            <div class="indicator-item">
+              <span class="indicator-name">RSI (14)</span>
+              <span class="indicator-value bullish">58.23</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-name">MACD</span>
+              <span class="indicator-value bullish">Bullish</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-name">SMA 20 vs 50</span>
+              <span class="indicator-value bullish">Above</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-name">SMA 50 vs 200</span>
+              <span class="indicator-value bearish">Below</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-name">ATR (14)</span>
+              <span class="indicator-value">1245.67</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-name">Bollinger Bands</span>
+              <span class="indicator-value">Middle</span>
+            </div>
+          </div>
+        </div>
+        <div class="analysis-container">
+          <div class="analysis-card">
+            <h3 class="card-title">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <rect
+                  x="2"
+                  y="2"
+                  width="12"
+                  height="12"
+                  stroke="#6a11cb"
+                  fill="none"
+                />
+                <line x1="2" y1="6" x2="14" y2="6" stroke="#6a11cb" />
+                <line x1="2" y1="10" x2="14" y2="10" stroke="#6a11cb" />
+              </svg>
+              Candlestick Patterns
+            </h3>
+            <ul class="pattern-list">
+              <li class="pattern-item">
+                <span class="pattern-name">Bullish Engulfing</span>
+                <span class="pattern-confidence bullish">82%</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Morning Star</span>
+                <span class="pattern-confidence bullish">76%</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Hammer</span>
+                <span class="pattern-confidence bullish">65%</span>
+              </li>
+            </ul>
+          </div>
+          <div class="analysis-card">
+            <h3 class="card-title">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <polyline
+                  points="2,12 6,8 10,10 14,4"
+                  stroke="#6a11cb"
+                  fill="none"
+                />
+                <circle cx="2" cy="12" r="1.5" fill="#6a11cb" />
+                <circle cx="6" cy="8" r="1.5" fill="#6a11cb" />
+                <circle cx="10" cy="10" r="1.5" fill="#6a11cb" />
+                <circle cx="14" cy="4" r="1.5" fill="#6a11cb" />
+              </svg>
+              Chart Patterns
+            </h3>
+            <ul class="pattern-list">
+              <li class="pattern-item">
+                <span class="pattern-name">Double Bottom</span>
+                <span class="pattern-confidence bullish">78%</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Ascending Triangle</span>
+                <span class="pattern-confidence bullish">73%</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Price Channel</span>
+                <span class="pattern-confidence neutral">62%</span>
+              </li>
+            </ul>
+          </div>
+          <div class="analysis-card">
+            <h3 class="card-title">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <line
+                  x1="2"
+                  y1="4"
+                  x2="14"
+                  y2="4"
+                  stroke="#e74c3c"
+                  stroke-width="2"
+                />
+                <line
+                  x1="2"
+                  y1="12"
+                  x2="14"
+                  y2="12"
+                  stroke="#27ae60"
+                  stroke-width="2"
+                />
+                <line
+                  x1="2"
+                  y1="8"
+                  x2="14"
+                  y2="8"
+                  stroke="#bbb"
+                  stroke-dasharray="2,1"
+                />
+              </svg>
+              Support & Resistance
+            </h3>
+            <ul class="support-resistance-list">
+              <li class="sr-item">
+                <span>Resistance 1</span>
+                <span class="resistance">$55,750</span>
+              </li>
+              <li class="sr-item">
+                <span>Resistance 2</span>
+                <span class="resistance">$57,200</span>
+              </li>
+              <li class="sr-item">
+                <span>Current Price</span>
+                <span>$52,345</span>
+              </li>
+              <li class="sr-item">
+                <span>Support 1</span>
+                <span class="support">$50,800</span>
+              </li>
+              <li class="sr-item">
+                <span>Support 2</span>
+                <span class="support">$49,250</span>
+              </li>
+            </ul>
+          </div>
+          <div class="analysis-card">
+            <h3 class="card-title">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="6" fill="none" stroke="#6a11cb" />
+                <line
+                  x1="8"
+                  y1="4"
+                  x2="8"
+                  y2="8"
+                  stroke="#6a11cb"
+                  stroke-width="2"
+                />
+                <line
+                  x1="8"
+                  y1="8"
+                  x2="12"
+                  y2="8"
+                  stroke="#6a11cb"
+                  stroke-width="2"
+                />
+              </svg>
+              Trend Analysis
+            </h3>
+            <ul class="pattern-list">
+              <li class="pattern-item">
+                <span class="pattern-name">Overall Trend</span>
+                <span class="pattern-confidence bullish">Uptrend</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Trend Strength</span>
+                <span class="pattern-confidence bullish">Strong</span>
+              </li>
+              <li class="pattern-item">
+                <span class="pattern-name">Moving Averages</span>
+                <span class="pattern-confidence bullish">Bullish</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="right-panel">
+        <!-- Bot Control Panel -->
+        <div class="bot-control-panel">
+          <div class="bot-header">
+            <div class="bot-title">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="2" />
+                <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              MAGUS PRIME X Bot
+            </div>
+            <div class="bot-status bot-inactive" id="bot-status-indicator">
+              Inactive
+            </div>
+          </div>
+          <div class="bot-metrics">
+            <div class="bot-metric">
+              <div class="metric-value" id="bot-trades-count">0</div>
+              <div class="metric-label">Trades Today</div>
+            </div>
+            <div class="bot-metric">
+              <div class="metric-value" id="bot-profit-today">$0.00</div>
+              <div class="metric-label">Profit Today</div>
+            </div>
+            <div class="bot-metric">
+              <div class="metric-value" id="bot-win-rate">0%</div>
+              <div class="metric-label">Win Rate</div>
+            </div>
+          </div>
+          <div class="strategy-selector">
+            <div class="strategy-option active" data-strategy="momentum">
+              Momentum
+            </div>
+            <div class="strategy-option" data-strategy="trend">Trend</div>
+            <div class="strategy-option" data-strategy="scalping">Scalping</div>
+            <div class="strategy-option" data-strategy="breakout">Breakout</div>
+            <div class="strategy-option" data-strategy="reversal">Reversal</div>
+          </div>
+          <div class="bot-controls">
+            <button class="control-btn start-btn" id="start-bot">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start Bot
+            </button>
+            <button class="control-btn pause-btn" id="pause-bot" disabled>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              Pause
+            </button>
+            <button class="control-btn stop-btn" id="stop-bot" disabled>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+              </svg>
+              Stop
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-title">ASSET PORTFOLIO</h3>
+          <div class="assets-dashboard">
+            <div class="asset-card crypto">
+              <div class="asset-header">
+                <div class="asset-name">Bitcoin</div>
+                <div class="asset-value bullish">$52,345</div>
+              </div>
+              <div class="asset-details">
+                <div>Allocation: 32%</div>
+                <div>P/L: +$1,450</div>
+              </div>
+              <div class="asset-position">Long: 0.025 BTC @ $51,240</div>
+            </div>
+            <div class="asset-card crypto">
+              <div class="asset-header">
+                <div class="asset-name">Ethereum</div>
+                <div class="asset-value bullish">$2,782</div>
+              </div>
+              <div class="asset-details">
+                <div>Allocation: 18%</div>
+                <div>P/L: +$320</div>
+              </div>
+              <div class="asset-position">Long: 0.45 ETH @ $2,705</div>
+            </div>
+            <div class="asset-card forex">
+              <div class="asset-header">
+                <div class="asset-name">EUR/USD</div>
+                <div class="asset-value bearish">$1.0862</div>
+              </div>
+              <div class="asset-details">
+                <div>Allocation: 25%</div>
+                <div>P/L: -$85</div>
+              </div>
+              <div class="asset-position">Short: 0.5 lot @ 1.0880</div>
+            </div>
+            <div class="asset-card stock">
+              <div class="asset-header">
+                <div class="asset-name">TSLA</div>
+                <div class="asset-value bullish">$178.39</div>
+              </div>
+              <div class="asset-details">
+                <div>Allocation: 15%</div>
+                <div>P/L: +$160</div>
+              </div>
+              <div class="asset-position">Long: 5 shares @ $175.25</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-title">ACTIVE TRADES</h3>
+          <div class="trade-list">
+            <div class="trade-item buy">
+              <div class="trade-header">
+                <div class="trade-symbol">BTC/USD</div>
+                <div class="trade-pl positive">+$1,450</div>
+              </div>
+              <div class="trade-details">
+                <div>Entry: $51,240</div>
+                <div>Size: 0.025 BTC</div>
+                <div>Time: 03:45</div>
+              </div>
+            </div>
+            <div class="trade-item buy">
+              <div class="trade-header">
+                <div class="trade-symbol">ETH/USD</div>
+                <div class="trade-pl positive">+$320</div>
+              </div>
+              <div class="trade-details">
+                <div>Entry: $2,705</div>
+                <div>Size: 0.45 ETH</div>
+                <div>Time: 02:30</div>
+              </div>
+            </div>
+            <div class="trade-item sell">
+              <div class="trade-header">
+                <div class="trade-symbol">EUR/USD</div>
+                <div class="trade-pl negative">-$85</div>
+              </div>
+              <div class="trade-details">
+                <div>Entry: 1.0880</div>
+                <div>Size: 0.5 lot</div>
+                <div>Time: 04:15</div>
+              </div>
+            </div>
+            <div class="trade-item buy">
+              <div class="trade-header">
+                <div class="trade-symbol">TSLA</div>
+                <div class="trade-pl positive">+$160</div>
+              </div>
+              <div class="trade-details">
+                <div>Entry: $175.25</div>
+                <div>Size: 5 shares</div>
+                <div>Time: 01:20</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-title">MARKET SUMMARY</h3>
+          <div class="panel-content">
+            <div class="signal-container">
+              <span class="signal-label">Signal</span>
+              <span class="signal-value bullish">BUY</span>
+            </div>
+            <div class="signal-container">
+              <span class="signal-label">Confidence</span>
+              <span class="signal-value">78%</span>
+            </div>
+            <div class="signal-container">
+              <span class="signal-label">Overall Bias</span>
+              <span class="signal-value bullish">BULLISH</span>
+            </div>
+            <div class="signal-container">
+              <span class="signal-label">Potential Target</span>
+              <span class="signal-value">$57,200</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <div>
+        Connected to Capital.com API | Last Update:
+        <span id="last-update-time">2025-03-23 05:15</span>
+      </div>
+      <div>
+        Data Refresh: 5s | Trading Mode:
+        <span id="trading-mode" class="text-green-500">Live</span> |
+        <span id="bot-status-text">Bot: Inactive</span>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let chartAnalyzer;
+      let botRunning = false;
+      let currentSymbol = "BTCUSD";
+      let currentTimeframe = "15m";
+
+      // Initialize app on page load
+      document.addEventListener("DOMContentLoaded", async function () {
+        // Update the current time
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 5000);
+
+        // Initialize with data from the server if available
+        if (window.electronAPI) {
+          try {
+            // Get account information
+            const accountInfo = await window.electronAPI.getAccountInfo();
+            updateAccountInfo(accountInfo);
+
+            // Get chart analysis for the current symbol
+            const analysis = await window.electronAPI.getChartAnalysis(
+              currentSymbol,
+              currentTimeframe,
+            );
+            updateChartAnalysis(analysis);
+
+            // Get pattern detection results
+            const patterns = await window.electronAPI.getPatterns(
+              currentSymbol,
+              currentTimeframe,
+            );
+            updatePatterns(patterns);
+
+            // Get support/resistance levels
+            const levels = await window.electronAPI.getSupportResistance(
+              currentSymbol,
+              currentTimeframe,
+            );
+            updateSupportResistance(levels);
+          } catch (error) {
+            console.error("Error initializing data:", error);
+          }
+        } else {
+          // For demo/mockup purposes - use dummy data
+          console.log("Running in demo mode with mock data");
+          simulateLiveData();
+        }
+
+        // Set up market selection handlers
+        setupMarketSelectionHandlers();
+
+        // Set up bot control handlers
+        setupBotControlHandlers();
+      });
+
+      // Update the current time display
+      function updateCurrentTime() {
+        const now = new Date();
+        const formattedTime = now
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })
+          .replace(",", "");
+        document.getElementById("last-update-time").textContent = formattedTime;
+      }
+
+      // Update account information display
+      function updateAccountInfo(accountInfo) {
+        if (!accountInfo) return;
+
+        // Update user balance display
+        const balanceElement = document.querySelector(".user-balance");
+        if (balanceElement && accountInfo.totalBalance) {
+          balanceElement.textContent = `$${accountInfo.totalBalance.toFixed(2)}`;
+        }
+      }
+
+      // Update chart analysis display
+      function updateChartAnalysis(analysis) {
+        if (!analysis) return;
+
+        // Update technical indicators
+        if (analysis.indicators) {
+          const indicatorGrid = document.querySelector(".indicator-grid");
+          if (indicatorGrid) {
+            // Update RSI
+            const rsiElement = indicatorGrid.querySelector(
+              '.indicator-value[data-indicator="rsi"]',
+            );
+            if (rsiElement && analysis.indicators.rsi) {
+              rsiElement.textContent = analysis.indicators.rsi.value.toFixed(2);
+              rsiElement.className = `indicator-value ${analysis.indicators.rsi.signal}`;
+            }
+
+            // Update other indicators similarly
+          }
+        }
+      }
+
+      // Update pattern recognition display
+      function updatePatterns(patterns) {
+        if (!patterns || !patterns.length) return;
+
+        const patternList = document.querySelector(".pattern-list");
+        if (!patternList) return;
+
+        patternList.innerHTML = "";
+        patterns.forEach((pattern) => {
+          const li = document.createElement("li");
+          li.className = "pattern-item";
+          li.innerHTML = `
+                    <span class="pattern-name">${pattern.name}</span>
+                    <span class="pattern-confidence ${pattern.direction.toLowerCase()}">${pattern.confidence}% ${pattern.direction}</span>
+                `;
+          patternList.appendChild(li);
+        });
+      }
+
+      // Update support/resistance levels
+      function updateSupportResistance(levels) {
+        if (!levels || !levels.length) return;
+
+        const srList = document.querySelector(".support-resistance-list");
+        if (!srList) return;
+
+        srList.innerHTML = "";
+        levels.forEach((level) => {
+          const li = document.createElement("li");
+          li.className = "sr-item";
+          li.innerHTML = `
+                    <span class="sr-type">${level.type}</span>
+                    <span class="sr-price">${level.price.toFixed(2)}</span>
+                    <span class="sr-strength ${level.strength.toLowerCase()}">${level.strength}</span>
+                `;
+          srList.appendChild(li);
+        });
+      }
+
+      // Set up market selection handlers
+      function setupMarketSelectionHandlers() {
+        const marketItems = document.querySelectorAll(".market-item");
+        marketItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            // Remove active class from all items
+            marketItems.forEach((mi) => mi.classList.remove("active"));
+
+            // Add active class to clicked item
+            this.classList.add("active");
+
+            // Get the selected symbol
+            const symbol =
+              this.getAttribute("data-symbol") || this.textContent.trim();
+            currentSymbol = symbol;
+
+            // Update chart title
+            const chartTitle = document.querySelector(".chart-title");
+            if (chartTitle) {
+              chartTitle.textContent = symbol;
+            }
+
+            // Get new data for this symbol
+            if (window.electronAPI) {
+              window.electronAPI
+                .getChartAnalysis(symbol, currentTimeframe)
+                .then(updateChartAnalysis)
+                .catch(console.error);
+
+              window.electronAPI
+                .getPatterns(symbol, currentTimeframe)
+                .then(updatePatterns)
+                .catch(console.error);
+
+              window.electronAPI
+                .getSupportResistance(symbol, currentTimeframe)
+                .then(updateSupportResistance)
+                .catch(console.error);
+            } else {
+              // For demo purposes
+              simulateLiveData(symbol);
+            }
+          });
+        });
+
+        // Handle timeframe selection
+        const timeframeButtons = document.querySelectorAll(".timeframe-btn");
+        timeframeButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // Remove active class from all buttons
+            timeframeButtons.forEach((btn) => btn.classList.remove("active"));
+
+            // Add active class to clicked button
+            this.classList.add("active");
+
+            // Get the selected timeframe
+            const timeframe =
+              this.getAttribute("data-timeframe") || this.textContent.trim();
+            currentTimeframe = timeframe;
+
+            // Get new data for this timeframe
+            if (window.electronAPI) {
+              window.electronAPI
+                .getChartAnalysis(currentSymbol, timeframe)
+                .then(updateChartAnalysis)
+                .catch(console.error);
+
+              window.electronAPI
+                .getPatterns(currentSymbol, timeframe)
+                .then(updatePatterns)
+                .catch(console.error);
+
+              window.electronAPI
+                .getSupportResistance(currentSymbol, timeframe)
+                .then(updateSupportResistance)
+                .catch(console.error);
+            } else {
+              // For demo purposes
+              simulateLiveData(currentSymbol, timeframe);
+            }
+          });
+        });
+      }
+
+      // Set up bot control handlers
+      function setupBotControlHandlers() {
+        const startButton = document.getElementById("start-bot");
+        const pauseButton = document.getElementById("pause-bot");
+        const stopButton = document.getElementById("stop-bot");
+        const strategyOptions = document.querySelectorAll(".strategy-option");
+
+        startButton.addEventListener("click", function () {
+          // Toggle bot status
+          botRunning = true;
+
+          // Enable/disable appropriate buttons
+          startButton.disabled = true;
+          pauseButton.disabled = false;
+          stopButton.disabled = false;
+
+          // Update status indicators
+          updateBotStatus();
+
+          // Get the selected strategy
+          const activeStrategy = document
+            .querySelector(".strategy-option.active")
+            .getAttribute("data-strategy");
+
+          // If using Electron API, send command to start bot
+          if (window.electronAPI) {
+            window.electronAPI
+              .startBot({
+                symbol: currentSymbol,
+                timeframe: currentTimeframe,
+                strategy: activeStrategy,
+              })
+              .then((result) => {
+                console.log("Bot started:", result);
+              })
+              .catch((error) => {
+                console.error("Error starting bot:", error);
+                botRunning = false;
+                updateBotStatus();
+              });
+          } else {
+            // For demo purposes
+            console.log(
+              `Bot started with strategy: ${activeStrategy} on ${currentSymbol} (${currentTimeframe})`,
+            );
+
+            // Simulate bot activity
+            simulateBotActivity();
+          }
+        });
+
+        pauseButton.addEventListener("click", function () {
+          // Send pause command
+          if (window.electronAPI) {
+            window.electronAPI.pauseBot().then((result) => {
+              console.log("Bot paused:", result);
+            });
+          } else {
+            console.log("Bot paused");
+          }
+
+          // Update button states
+          startButton.disabled = false;
+          pauseButton.disabled = true;
+          stopButton.disabled = false;
+        });
+
+        stopButton.addEventListener("click", function () {
+          // Toggle bot status
+          botRunning = false;
+
+          // Enable/disable appropriate buttons
+          startButton.disabled = false;
+          pauseButton.disabled = true;
+          stopButton.disabled = true;
+
+          // Update status indicators
+          updateBotStatus();
+
+          // If using Electron API, send command to stop bot
+          if (window.electronAPI) {
+            window.electronAPI.stopBot().then((result) => {
+              console.log("Bot stopped:", result);
+            });
+          } else {
+            // For demo purposes
+            console.log("Bot stopped");
+          }
+        });
+
+        // Strategy selector handlers
+        strategyOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            // Remove active class from all options
+            strategyOptions.forEach((opt) => opt.classList.remove("active"));
+
+            // Add active class to clicked option
+            this.classList.add("active");
+
+            // Update strategy if bot is running
+            if (botRunning && window.electronAPI) {
+              const strategy = this.getAttribute("data-strategy");
+              window.electronAPI.updateBotStrategy(strategy);
+            }
+          });
+        });
+      }
+
+      // Update bot status display
+      function updateBotStatus() {
+        const statusIndicator = document.getElementById("bot-status-indicator");
+        const statusText = document.getElementById("bot-status-text");
+
+        if (botRunning) {
+          statusIndicator.textContent = "Active";
+          statusIndicator.className = "bot-status bot-active";
+          statusText.textContent = "Bot: Active";
+
+          // Update button states
+          document.getElementById("start-bot").disabled = true;
+          document.getElementById("pause-bot").disabled = false;
+          document.getElementById("stop-bot").disabled = false;
+        } else {
+          statusIndicator.textContent = "Inactive";
+          statusIndicator.className = "bot-status bot-inactive";
+          statusText.textContent = "Bot: Inactive";
+
+          // Update button states
+          document.getElementById("start-bot").disabled = false;
+          document.getElementById("pause-bot").disabled = true;
+          document.getElementById("stop-bot").disabled = true;
+        }
+      }
+
+      // Simulate bot activity for demo purposes
+      function simulateBotActivity() {
+        if (!botRunning) return;
+
+        // Simulate trade execution
+        const tradeCount = parseInt(
+          document.getElementById("bot-trades-count").textContent,
+        );
+        document.getElementById("bot-trades-count").textContent =
+          tradeCount + 1;
+
+        // Simulate profit change
+        let profit = parseFloat(
+          document
+            .getElementById("bot-profit-today")
+            .textContent.replace("$", ""),
+        );
+        const change =
+          (Math.random() > 0.7 ? -1 : 1) * (Math.random() * 50 + 10).toFixed(2);
+        profit = (profit + parseFloat(change)).toFixed(2);
+        document.getElementById("bot-profit-today").textContent = "$" + profit;
+
+        // Update win rate
+        const winRate = Math.floor(Math.random() * 20 + 60); // 60-80% win rate
+        document.getElementById("bot-win-rate").textContent = winRate + "%";
+
+        // Schedule next update
+        setTimeout(simulateBotActivity, Math.random() * 30000 + 20000);
+      }
+
+      // For demo/mockup purposes - simulate live data
+      function simulateLiveData(symbol = "BTCUSD", timeframe = "15m") {
+        // Mock data for demonstration
+        const mockAnalysis = {
+          indicators: {
+            rsi: { value: 58.72, signal: "neutral" },
+            macd: { value: 0.024, signal: "bullish" },
+            atr: { value: 120.5, signal: "neutral" },
+            ema: { value: 28540, signal: "bullish" },
+          },
+        };
+
+        const mockPatterns = [
+          { name: "Bullish Engulfing", confidence: 85, direction: "Bullish" },
+          { name: "Double Bottom", confidence: 72, direction: "Bullish" },
+          { name: "Rising Wedge", confidence: 65, direction: "Bearish" },
+        ];
+
+        const mockLevels = [
+          { type: "Support", price: 28100.5, strength: "Strong" },
+          { type: "Resistance", price: 28750.25, strength: "Medium" },
+          { type: "Support", price: 27800.0, strength: "Weak" },
+        ];
+
+        // Update the UI with mock data
+        updateChartAnalysis(mockAnalysis);
+        updatePatterns(mockPatterns);
+        updateSupportResistance(mockLevels);
+
+        // Simulate account info
+        updateAccountInfo({
+          totalBalance: 10547.82,
+        });
+      }
+    </script>
+  </body>
+</html>

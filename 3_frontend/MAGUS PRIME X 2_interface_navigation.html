@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAGUS PRIME X - Interface Navigation</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        font-family: "Arial", sans-serif;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .interface-links {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      .interface-link {
+        display: block;
+        width: 300px;
+        padding: 15px;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .interface-link:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MAGUS PRIME X Interface Preview</h1>
+    <div class="interface-links">
+      <a href="mockup_startup.html" class="interface-link">Startup Screen</a>
+      <a href="mockup_trading_interface.html" class="interface-link"
+        >Trading Interface</a
+      >
+      <a href="templates/dashboard.html" class="interface-link"
+        >Dashboard (if available)</a
+      >
+    </div>
+  </body>
+</html>

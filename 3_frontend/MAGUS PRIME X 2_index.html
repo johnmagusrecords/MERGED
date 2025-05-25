@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magus Prime X - AI Powered Trading Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0a0a0a;
+        color: #ffffff;
+      }
+      .logo-text {
+        font-family: "Orbitron", sans-serif;
+      }
+      .nav-link.active {
+        background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+        color: #000;
+      }
+      .chart-container {
+        height: calc(100vh - 300px);
+        min-height: 600px;
+        resize: vertical;
+        overflow: hidden;
+      }
+      .notification-badge {
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <nav class="bg-gray-900 border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img src="logo.svg" alt="Magus Prime X" class="h-10 w-10 mr-2" />
+            <span
+              class="logo-text text-xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text"
+              >MAGUS PRIME X</span
+            >
+          </div>
+
+          <div class="flex space-x-4">
+            <button
+              data-tab="dashboard"
+              onclick="switchTab('dashboard')"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium active"
+            >
+              Dashboard
+            </button>
+            <button
+              data-tab="trades"
+              onclick="switchTab('trades')"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Trades
+            </button>
+            <button
+              data-tab="assets"
+              onclick="switchTab('assets')"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Assets
+            </button>
+            <button
+              data-tab="news"
+              onclick="switchTab('news')"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium"
+            >
+              News
+            </button>
+          </div>
+
+          <div class="flex items-center space-x-6">
+            <!-- Bot Control -->
+            <div class="flex items-center space-x-2">
+              <button
+                id="startBot"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                <i class="fas fa-play mr-1"></i> Start Bot
+              </button>
+              <button
+                id="stopBot"
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium hidden"
+              >
+                <i class="fas fa-stop mr-1"></i> Stop Bot
+              </button>
+            </div>
+
+            <!-- Currency Selector -->
+            <div class="relative">
+              <select
+                aria-label="Select currency"
+                onchange="switchCurrency(this.value)"
+                class="bg-gray-800 text-white px-3 py-2 rounded-md text-sm"
+              >
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="AED">AED</option>
+              </select>
+            </div>
+
+            <!-- Capital.com Login -->
+            <button
+              onclick="showLoginModal()"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              <i class="fas fa-sign-in-alt mr-1"></i> Connect
+            </button>
+
+            <!-- Notifications -->
+            <div id="notificationContainer" class="relative">
+              <button
+                aria-label="Notifications"
+                onclick="toggleNotifications(event)"
+                class="relative"
+              >
+                <i class="fas fa-bell text-gray-300 text-xl"></i>
+                <span
+                  class="notification-badge absolute -top-1 -right-1 bg-red-500 text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                  >3</span
+                >
+              </button>
+
+              <div
+                id="notificationDropdown"
+                class="hidden absolute right-0 mt-2 w-96 bg-gray-800 rounded-lg shadow-lg z-50"
+              >
+                <div
+                  class="p-4 border-b border-gray-700 flex justify-between items-center"
+                >
+                  <h3 class="text-lg font-semibold">Notifications</h3>
+                  <button
+                    onclick="markAllAsRead()"
+                    class="text-sm text-blue-400 hover:text-blue-300"
+                  >
+                    Mark all as read
+                  </button>
+                </div>
+                <div class="max-h-96 overflow-y-auto">
+                  <!-- Notification items will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div
+      id="loginModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-gray-900 rounded-lg p-8 w-96">
+        <h2 class="text-xl font-bold mb-6">Connect to Capital.com</h2>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">API Key</label>
+            <input
+              type="text"
+              id="apiKey"
+              class="w-full bg-gray-800 rounded px-3 py-2"
+              placeholder="Enter API Key"
+              aria-label="API Key"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">API Password</label>
+            <input
+              type="password"
+              id="apiPassword"
+              class="w-full bg-gray-800 rounded px-3 py-2"
+              placeholder="Enter API Password"
+              aria-label="API Password"
+            />
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button
+              type="button"
+              onclick="hideLoginModal()"
+              class="px-4 py-2 text-gray-400 hover:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+              aria-label="Connect to Capital.com"
+            >
+              Connect
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div
+      id="dashboardContent"
+      class="content-section max-w-7xl mx-auto px-4 py-6"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Portfolio Value -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h2 class="text-lg font-semibold mb-4">Portfolio Value</h2>
+          <div class="text-3xl font-bold currency-value" data-value="124578.34">
+            $124,578.34
+          </div>
+          <div class="text-green-500 mt-2">+2.45% today</div>
+        </div>
+
+        <!-- Active Trades -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h2 class="text-lg font-semibold mb-4">Active Trades</h2>
+          <div class="text-3xl font-bold">12</div>
+          <div class="text-gray-400 mt-2">8 Scalping • 4 Swing</div>
+        </div>
+
+        <!-- Win Rate -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h2 class="text-lg font-semibold mb-4">Win Rate</h2>
+          <div class="text-3xl font-bold">76%</div>
+          <div class="text-gray-400 mt-2">Last 100 trades</div>
+        </div>
+      </div>
+
+      <!-- TradingView Chart -->
+      <div class="mt-6 bg-gray-800 rounded-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center">
+            <h2 class="text-lg font-semibold">Market Chart</h2>
+            <div class="ml-4 flex space-x-2">
+              <button
+                aria-label="Minimize chart"
+                class="px-3 py-1 rounded text-sm bg-gray-700"
+                onclick="toggleChartSize('minimize')"
+              >
+                <i class="fas fa-compress"></i>
+              </button>
+              <button
+                aria-label="Maximize chart"
+                class="px-3 py-1 rounded text-sm bg-gray-700"
+                onclick="toggleChartSize('maximize')"
+              >
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex space-x-2 timeframe-selector">
+            <button class="px-3 py-1 rounded text-sm">1m</button>
+            <button class="px-3 py-1 rounded text-sm">5m</button>
+            <button class="px-3 py-1 rounded text-sm bg-blue-500 text-white">
+              15m
+            </button>
+            <button class="px-3 py-1 rounded text-sm">1h</button>
+            <button class="px-3 py-1 rounded text-sm">4h</button>
+            <button class="px-3 py-1 rounded text-sm">1d</button>
+          </div>
+        </div>
+        <div id="tradingview_chart" class="chart-container"></div>
+      </div>
+
+      <!-- Trading Signals -->
+      <div class="mt-6">
+        <h2 class="text-lg font-semibold mb-4">Trading Signals</h2>
+        <div
+          id="signalsContainer"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- Signals will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Trades -->
+    <div
+      id="tradesContent"
+      class="content-section max-w-7xl mx-auto px-4 py-6 hidden"
+    >
+      <!-- Trades will be populated here -->
+    </div>
+
+    <!-- Assets -->
+    <div
+      id="assetsContent"
+      class="content-section max-w-7xl mx-auto px-4 py-6 hidden"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Crypto Assets -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+            <i class="fab fa-bitcoin text-yellow-400 text-2xl mr-2"></i>
+            <h3 class="text-lg font-semibold">Bitcoin</h3>
+          </div>
+          <div class="text-2xl font-bold currency-value" data-value="45397.82">
+            $45,397.82
+          </div>
+          <div class="text-green-500 mt-1">+1.2% (24h)</div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+            <i class="fab fa-ethereum text-blue-400 text-2xl mr-2"></i>
+            <h3 class="text-lg font-semibold">Ethereum</h3>
+          </div>
+          <div class="text-2xl font-bold currency-value" data-value="3245.67">
+            $3,245.67
+          </div>
+          <div class="text-red-500 mt-1">-0.5% (24h)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- News -->
+    <div
+      id="newsContent"
+      class="content-section max-w-7xl mx-auto px-4 py-6 hidden"
+    >
+      <!-- News items will be populated here -->
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

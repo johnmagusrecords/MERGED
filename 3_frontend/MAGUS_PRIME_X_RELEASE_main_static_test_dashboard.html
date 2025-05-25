@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGUS PRIME X - API Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+        .dark pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-6">MAGUS PRIME X - API Test Dashboard</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Trade Data</h2>
+                <div class="mb-2">
+                    <button id="fetchTrades" class="bg-blue-600 text-white px-4 py-2 rounded">Fetch Trades</button>
+                </div>
+                <pre id="tradesOutput">Click button to fetch trade data...</pre>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Metrics</h2>
+                <div class="mb-2">
+                    <button id="fetchMetrics" class="bg-blue-600 text-white px-4 py-2 rounded">Fetch Metrics</button>
+                </div>
+                <pre id="metricsOutput">Click button to fetch metrics...</pre>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Change Strategy</h2>
+                <div class="flex space-x-2 mb-4">
+                    <button data-strategy="Safe" class="strategy-btn bg-green-600 text-white px-4 py-2 rounded">Safe</button>
+                    <button data-strategy="Balanced" class="strategy-btn bg-blue-600 text-white px-4 py-2 rounded">Balanced</button>
+                    <button data-strategy="Aggressive" class="strategy-btn bg-red-600 text-white px-4 py-2 rounded">Aggressive</button>
+                </div>
+                <pre id="strategyOutput">Select a strategy to change...</pre>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Clear History</h2>
+                <div class="mb-2">
+                    <button id="clearHistory" class="bg-red-600 text-white px-4 py-2 rounded">Clear Trade History</button>
+                </div>
+                <pre id="clearOutput">Click button to clear trade history...</pre>
+            </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+            <p>
+                <a href="/dashboard/react" class="text-blue-600 hover:underline">Go to React Dashboard</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('fetchTrades').addEventListener('click', function() {
+            fetchData('/api/trades', 'tradesOutput');
+        });
+        
+        document.getElementById('fetchMetrics').addEventListener('click', function() {
+            fetchData('/api/metrics', 'metricsOutput');
+        });
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const strategy = this.getAttribute('data-strategy');
+                changeStrategy(strategy);
+            });
+        });
+        
+        document.getElementById('clearHistory').addEventListener('click', function() {
+            clearHistory();
+        });
+        
+        function fetchData(url, outputId) {
+            const output = document.getElementById(outputId);
+            output.textContent = 'Loading...';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    output.textContent = 'Error: ' + error.message;
+                });
+        }
+        
+        function changeStrategy(strategy) {
+            const output = document.getElementById('strategyOutput');
+            output.textContent = `Changing strategy to ${strategy}...`;
+            
+            fetch('/api/strategy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ strategy }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent = JSON.stringify(data, null, 2);
+                    if (data.success) {
+                        // Update button UI
+                        document.querySelectorAll('.strategy-btn').forEach(btn => {
+                            btn.classList.remove('bg-green-600', 'bg-blue-600', 'bg-red-600');
+                            btn.classList.add('bg-gray-400');
+                        });
+                        
+                        // Highlight selected strategy
+                        const selectedBtn = document.querySelector(`[data-strategy="${strategy}"]`);
+                        selectedBtn.classList.remove('bg-gray-400');
+                        if (strategy === 'Safe') {
+                            selectedBtn.classList.add('bg-green-600');
+                        } else if (strategy === 'Balanced') {
+                            selectedBtn.classList.add('bg-blue-600');
+                        } else if (strategy === 'Aggressive') {
+                            selectedBtn.classList.add('bg-red-600');
+                        }
+                    }
+                })
+                .catch(error => {
+                    output.textContent = 'Error: ' + error.message;
+                });
+        }
+        
+        function clearHistory() {
+            const output = document.getElementById('clearOutput');
+            output.textContent = 'Clearing trade history...';
+            
+            fetch('/api/clear-history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    output.textContent = 'Error: ' + error.message;
+                });
+        }
+    </script>
+</body>
+</html>

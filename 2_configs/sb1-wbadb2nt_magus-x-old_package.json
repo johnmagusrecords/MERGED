@@ -1,0 +1,9 @@
+{
+  "name": "magus-prime-x-legacy",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Legacy version of Magus Prime X - AI Powered Trading Bot",
+  "scripts": {
+    "start": "echo 'Legacy version - please use root directory'"
+  }
+}

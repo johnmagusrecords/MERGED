@@ -1,0 +1,6 @@
+# Python dependencies
+python-dotenv
+
+requests
+pandas
+numpy
