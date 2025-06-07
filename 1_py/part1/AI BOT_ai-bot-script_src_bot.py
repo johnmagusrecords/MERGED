@@ -5,7 +5,7 @@ import logging
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 
-# Correct import paths
+# Import service modules
 from src.services.authentication import authenticate
 from src.services.market_data import get_market_data, analyze_market
 from src.services.news import fetch_news, analyze_sentiment
