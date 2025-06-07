@@ -273,3 +273,4 @@ async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             f"Markets={','.join(CONFIG.MARKETS)}, "
             f"Risk={CONFIG.RISK_PERCENT}%"
         )
+        await context.bot.send_message(chat_id=chat.id, text=info)
