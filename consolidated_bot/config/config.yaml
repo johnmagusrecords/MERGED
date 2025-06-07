@@ -1,0 +1,9 @@
+# Placeholder configuration file for the consolidated trading bot
+
+api_key: YOUR_API_KEY
+api_secret: YOUR_API_SECRET
+exchange: example
+
+strategy:
+  # Add strategy-specific parameters here
+  parameter1: value1
