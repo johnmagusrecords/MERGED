@@ -1,0 +1,5 @@
+# Example requirements for the consolidated bot
+pandas
+numpy
+requests
+pyyaml
