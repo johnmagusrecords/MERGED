@@ -95,11 +95,10 @@ def extended_test():
                 )
                 if prediction:
                     logger.info(
-                        f" "
-ML Prediction - Direction: {
-                                                            prediction.d + "irection},
-                                                            Confidence: {prediction.confi + "dence:.2f},
-                                                            Expected Return: {prediction + ".expected_return:.2f}%"                    )
+                        f"ML Prediction - Direction: {prediction.direction}, "
+                        f"Confidence: {prediction.confidence:.2f}, "
+                        f"Expected Return: {prediction.expected_return:.2f}%"
+                    )
                 else:
                     logger.info("No ML prediction available")
 
